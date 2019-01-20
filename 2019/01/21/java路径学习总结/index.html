@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>java路径学习总结 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="阿文's Blog">
+  
+  <meta name="description" content="java开发中的路径问题总结java项目开发中常见的路径详解在讲解路径前，明确几个要点： 项目中“/”表示当前路径。 对于游览器访问的路径，“/”表示tomcat下的webapps目录。 对于服务器发起的路劲，“/”表示项目的webRoot目录（IDEA中叫webApp）。 对于项目src目录下的资源，项目部署后都会自动放在“/WEB-INF/classes”目录下。  1、src下面文件的路径获">
+<meta name="keywords" content="java实践">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java路径学习总结">
+<meta property="og:url" content="http://yoursite.com/2019/01/21/java路径学习总结/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="java开发中的路径问题总结java项目开发中常见的路径详解在讲解路径前，明确几个要点： 项目中“/”表示当前路径。 对于游览器访问的路径，“/”表示tomcat下的webapps目录。 对于服务器发起的路劲，“/”表示项目的webRoot目录（IDEA中叫webApp）。 对于项目src目录下的资源，项目部署后都会自动放在“/WEB-INF/classes”目录下。  1、src下面文件的路径获">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-01-20T16:52:16.405Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java路径学习总结">
+<meta name="twitter:description" content="java开发中的路径问题总结java项目开发中常见的路径详解在讲解路径前，明确几个要点： 项目中“/”表示当前路径。 对于游览器访问的路径，“/”表示tomcat下的webapps目录。 对于服务器发起的路劲，“/”表示项目的webRoot目录（IDEA中叫webApp）。 对于项目src目录下的资源，项目部署后都会自动放在“/WEB-INF/classes”目录下。  1、src下面文件的路径获">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">阿文&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a href="/">
+                        <i class="fa fa-home"></i>
+                        <span>主页</span>
+                    </a>
+                    
+                    <a href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>about me</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        阿文&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        欢迎来到阿文&#39;s blog
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="awen" target="_blank" href="//vicawen.com">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/craywan/">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//github.com/craywan/">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="CSDN" target="_blank" href="//github.com/craywan/">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-java路径学习总结" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      java路径学习总结
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2019-01-21
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h1 id="java开发中的路径问题总结"><a href="#java开发中的路径问题总结" class="headerlink" title="java开发中的路径问题总结"></a>java开发中的路径问题总结</h1><h2 id="java项目开发中常见的路径详解"><a href="#java项目开发中常见的路径详解" class="headerlink" title="java项目开发中常见的路径详解"></a>java项目开发中常见的路径详解</h2><h3 id="在讲解路径前，明确几个要点："><a href="#在讲解路径前，明确几个要点：" class="headerlink" title="在讲解路径前，明确几个要点："></a>在讲解路径前，明确几个要点：</h3><ul>
+<li>项目中“/”表示当前路径。</li>
+<li>对于游览器访问的路径，“/”表示tomcat下的webapps目录。</li>
+<li>对于服务器发起的路劲，“/”表示项目的webRoot目录（IDEA中叫webApp）。</li>
+<li>对于项目src目录下的资源，项目部署后都会自动放在“/WEB-INF/classes”目录下。</li>
+</ul>
+<h3 id="1、src下面文件的路径"><a href="#1、src下面文件的路径" class="headerlink" title="1、src下面文件的路径"></a>1、src下面文件的路径</h3><p>获取src路径下的资源文件的方法：<br>（1）通过getRequestUrl()来获取(已经淘汰)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">request.getRequestUrl(&quot;/demo.txt&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>（2）通过context获取<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">request.getServletContext().getRealPath(&quot;/WEB-INF/classes/demo.txt&quot;);</span><br></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="2、获取java资源路径的方法"><a href="#2、获取java资源路径的方法" class="headerlink" title="2、获取java资源路径的方法"></a>2、获取java资源路径的方法</h2><ul>
+<li>获取类加载的根路径 \target\classes</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">this.getClass().getResource(&quot;/&quot;).getPath()</span><br><span class="line">this.getClass().getClassLoader().getResource(&quot;&quot;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>获取当前类的工程路径 \target\classes\my</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">this.getClass().getResource(&quot;&quot;).getPath()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>获取项目路径</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">System.getProperty(&quot;user.dir&quot;)</span><br><span class="line"></span><br><span class="line">File directory = new File(&quot;&quot;);// 参数为空</span><br><span class="line">String courseFile = directory.getCanonicalPath();</span><br></pre></td></tr></table></figure>
+<ul>
+<li>获取项目src目录下的路径</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">this.getClass().getClassLoader().getResource(&quot;test.txt&quot;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过类加载器来加载资源文件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1、ClassLoader.getSystemClassLoader().getResource(&quot;demo/names.ser&quot;);</span><br><span class="line">2、Demo1.class.getResource(&quot;names.ser&quot;);获取的是Demo1的class文件所在包内的资源</span><br><span class="line">3、 Demo1.class.getResource(&quot;/demo/names.ser&quot;);获取的是demo包内的names.ser文件</span><br></pre></td></tr></table></figure>
+<p>具体敬请参考</p>
+<h2 id="java项目中的路径问题，java项目下资源文件路径的获取"><a href="#java项目中的路径问题，java项目下资源文件路径的获取" class="headerlink" title="java项目中的路径问题，java项目下资源文件路径的获取"></a><a href="https://www.cnblogs.com/renboqie/p/5571610.html" target="_blank" rel="noopener">java项目中的路径问题</a>，<a href="https://blog.csdn.net/lj_dreamone/article/details/79280085" target="_blank" rel="noopener">java项目下资源文件路径的获取</a></h2><h2 id="3、java加载资源文件讲解"><a href="#3、java加载资源文件讲解" class="headerlink" title="3、java加载资源文件讲解"></a>3、java加载资源文件讲解</h2><h3 id="首先对classpath进行一个定义："><a href="#首先对classpath进行一个定义：" class="headerlink" title="首先对classpath进行一个定义："></a>首先对classpath进行一个定义：</h3><p>==classpath是指web_inf下的classes目录。classes下主要包含src的资源文件，src编译的源文件，项目模板文件。相当于项目定位资源的入口==<br>获取classpath路径的方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Thread.currentThread().getContextClassLoader().getResource(&quot;&quot;).getPath();</span><br></pre></td></tr></table></figure></p>
+<p>###4、java中windows和lunix下路径差异解析<br>1、windows与lunix路径的不同之处</p>
+<ul>
+<li>windows路径有盘符，所以c:\\web在Lunix下路径为/web</li>
+<li>windows下的路径分隔符为”\”，而Lunix下为”/“。</li>
+<li>windows下的路径要区分大小写。    </li>
+</ul>
+<p>2、差异解决方案：尽量用java提供的路径获取机制来期待路径常量   </p>
+<ul>
+<li>路径中的分隔符用java提供的System.getProperty(“file.separator”)方法或者File.seperator来代替。<br>-通过以下方法来代替路径常量的输入：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 分隔符</span><br><span class="line">String fileSeperator = File.seperator;</span><br><span class="line"> </span><br><span class="line">// 用户主目录</span><br><span class="line">String userHome = System.getproperties().getProperty(&quot;user.home&quot;);</span><br><span class="line"> </span><br><span class="line">// Java实时运行环境的安装目录</span><br><span class="line">String javaPath = System.getproperties().getProperty(&quot;java.home&quot;);</span><br><span class="line"> </span><br><span class="line">// 操作系统名称</span><br><span class="line">String osName = System.getproperties().getProperty(&quot;os.name&quot;);</span><br><span class="line"> </span><br><span class="line">// 当前用户程序所在目录</span><br><span class="line">String userDir = System.getproperties().getProperty(&quot;user.dir&quot;);</span><br><span class="line"> </span><br><span class="line">// JDK的安装目录</span><br><span class="line">String jdkDir = System.getproperties().getProperty(&quot;java.ext.dirs&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>参考：<em>**</em><a href="https://blog.csdn.net/challenge_me/article/details/82975531" target="_blank" rel="noopener">用Java创建可适应Windows和Linux的文件路径</a></p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2019年01月21日 00:52</p>
+        <p>原始链接： <a class="post-url" href="/2019/01/21/java路径学习总结/" title="java路径学习总结">http://yoursite.com/2019/01/21/java路径学习总结/</a></p>
+        <footer>
+            <a href="http://yoursite.com">
+                <img src="/images/logo.png" alt="John Doe">
+                John Doe
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2019/01/21/java路径学习总结/&title=《java路径学习总结》 — Hexo&pic=/images/banner.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2019/01/21/java路径学习总结/&title=《java路径学习总结》 — Hexo&source=" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2019/01/21/java路径学习总结/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《java路径学习总结》 — Hexo&url=http://yoursite.com/2019/01/21/java路径学习总结/&via=http://yoursite.com" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2019/01/21/java路径学习总结/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2019/01/21/java路径学习总结/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/java实践/" class="color2">java实践</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#java开发中的路径问题总结"><span class="post-toc-text">java开发中的路径问题总结</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#java项目开发中常见的路径详解"><span class="post-toc-text">java项目开发中常见的路径详解</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#在讲解路径前，明确几个要点："><span class="post-toc-text">在讲解路径前，明确几个要点：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1、src下面文件的路径"><span class="post-toc-text">1、src下面文件的路径</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2、获取java资源路径的方法"><span class="post-toc-text">2、获取java资源路径的方法</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#java项目中的路径问题，java项目下资源文件路径的获取"><span class="post-toc-text">java项目中的路径问题，java项目下资源文件路径的获取</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3、java加载资源文件讲解"><span class="post-toc-text">3、java加载资源文件讲解</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#首先对classpath进行一个定义："><span class="post-toc-text">首先对classpath进行一个定义：</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2019/01/19/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Hello World</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2019 John Doe<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "http://yoursite.com",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/java实践/" style="font-size: 10px;">java实践</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a href="/">
+                    <i class="fa fa-home"></i><span>主页</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/about">
+                    <i class="fa fa-user"></i><span>about me</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/java实践/" style="font-size: 10px;">java实践</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
