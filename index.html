@@ -3,18 +3,22 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Hexo</title>
+  <title>����&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
     <meta name="keywords" content="阿文's Blog">
   
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:locale" content="default">
+  <meta name="description" content="���Լ�">
+<meta name="keywords" content="����,����&#39;s Blog">
+<meta property="og:type" content="website">
+<meta property="og:title" content="����&#39;s Blog">
+<meta property="og:url" content="http://vicwen.com/index.html">
+<meta property="og:site_name" content="����&#39;s Blog">
+<meta property="og:description" content="���Լ�">
+<meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="����&#39;s Blog">
+<meta name="twitter:description" content="���Լ�">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -123,24 +127,64 @@
     
     <div class="article-entry " itemprop="articleBody">
       
-        <div class="article-img">
-            <a href="/2019/01/21/java路径学习总结/">
-                
-                <img src="http://yoursite.com//images/banner.jpg" alt="java路径学习总结" title="java路径学习总结">
-                
-            </a>
-        </div>
-        <div class="article-feed">
-            <p>
-                java开发中的路径问题总结java项目开发中常见的路径详解在讲解路径前，明确几个要点：
-项目中“/”表示当前路径。
-对于游览器访问的路径，“/”表示tomcat下的webapps目录。
-对于服务器发起的路劲，“/”表示项目的webRoot目录（IDEA中叫webApp）。
-对于项目src目录下的资源，项目部署后都会自动放在“/WEB-INF/classes”目录下。
+            
+            <h1 id="java开发中的路径问题总结"><a href="#java开发中的路径问题总结" class="headerlink" title="java开发中的路径问题总结"></a>java开发中的路径问题总结</h1><h2 id="java项目开发中常见的路径详解"><a href="#java项目开发中常见的路径详解" class="headerlink" title="java项目开发中常见的路径详解"></a>java项目开发中常见的路径详解</h2><h3 id="在讲解路径前，明确几个要点："><a href="#在讲解路径前，明确几个要点：" class="headerlink" title="在讲解路径前，明确几个要点："></a>在讲解路径前，明确几个要点：</h3><ul>
+<li>项目中“/”表示当前路径。</li>
+<li>对于游览器访问的路径，“/”表示tomcat下的webapps目录。</li>
+<li>对于服务器发起的路劲，“/”表示项目的webRoot目录（IDEA中叫webApp）。</li>
+<li>对于项目src目录下的资源，项目部署后都会自动放在“/WEB-INF/classes”目录下。</li>
+</ul>
+<h3 id="1、src下面文件的路径"><a href="#1、src下面文件的路径" class="headerlink" title="1、src下面文件的路径"></a>1、src下面文件的路径</h3><p>获取src路径下的资源文件的方法：<br>（1）通过getRequestUrl()来获取(已经淘汰)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">request.getRequestUrl(&quot;/demo.txt&quot;);</span><br></pre></td></tr></table></figure></p>
+<p>（2）通过context获取<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">request.getServletContext().getRealPath(&quot;/WEB-INF/classes/demo.txt&quot;);</span><br></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="2、获取java资源路径的方法"><a href="#2、获取java资源路径的方法" class="headerlink" title="2、获取java资源路径的方法"></a>2、获取java资源路径的方法</h2><ul>
+<li>获取类加载的根路径 \target\classes</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">this.getClass().getResource(&quot;/&quot;).getPath()</span><br><span class="line">this.getClass().getClassLoader().getResource(&quot;&quot;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>获取当前类的工程路径 \target\classes\my</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">this.getClass().getResource(&quot;&quot;).getPath()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>获取项目路径</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">System.getProperty(&quot;user.dir&quot;)</span><br><span class="line"></span><br><span class="line">File directory = new File(&quot;&quot;);// 参数为空</span><br><span class="line">String courseFile = directory.getCanonicalPath();</span><br></pre></td></tr></table></figure>
+<ul>
+<li>获取项目src目录下的路径</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">this.getClass().getClassLoader().getResource(&quot;test.txt&quot;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过类加载器来加载资源文件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1、ClassLoader.getSystemClassLoader().getResource(&quot;demo/names.ser&quot;);</span><br><span class="line">2、Demo1.class.getResource(&quot;names.ser&quot;);获取的是Demo1的class文件所在包内的资源</span><br><span class="line">3、 Demo1.class.getResource(&quot;/demo/names.ser&quot;);获取的是demo包内的names.ser文件</span><br></pre></td></tr></table></figure>
+<p>具体敬请参考</p>
+<h2 id="java项目中的路径问题，java项目下资源文件路径的获取"><a href="#java项目中的路径问题，java项目下资源文件路径的获取" class="headerlink" title="java项目中的路径问题，java项目下资源文件路径的获取"></a><a href="https://www.cnblogs.com/renboqie/p/5571610.html" target="_blank" rel="noopener">java项目中的路径问题</a>，<a href="https://blog.csdn.net/lj_dreamone/article/details/79280085" target="_blank" rel="noopener">java项目下资源文件路径的获取</a></h2><h2 id="3、java加载资源文件讲解"><a href="#3、java加载资源文件讲解" class="headerlink" title="3、java加载资源文件讲解"></a>3、java加载资源文件讲解</h2><h3 id="首先对classpath进行一个定义："><a href="#首先对classpath进行一个定义：" class="headerlink" title="首先对classpath进行一个定义："></a>首先对classpath进行一个定义：</h3><p>==classpath是指web_inf下的classes目录。classes下主要包含src的资源文件，src编译的源文件，项目模板文件。相当于项目定位资源的入口==<br>获取classpath路径的方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Thread.currentThread().getContextClassLoader().getResource(&quot;&quot;).getPath();</span><br></pre></td></tr></table></figure></p>
+<p>###4、java中windows和lunix下路径差异解析<br>1、windows与lunix路径的不同之处</p>
+<ul>
+<li>windows路径有盘符，所以c:\\web在Lunix下路径为/web</li>
+<li>windows下的路径分隔符为”\”，而Lunix下为”/“。</li>
+<li>windows下的路径要区分大小写。    </li>
+</ul>
+<p>2、差异解决方案：尽量用java提供的路径获取机制来期待路径常量   </p>
+<ul>
+<li>路径中的分隔符用java提供的System.getProperty(“file.separator”)方法或者File.seperator来代替。<br>-通过以下方法来代替路径常量的输入：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 分隔符</span><br><span class="line">String fileSeperator = File.seperator;</span><br><span class="line"> </span><br><span class="line">// 用户主目录</span><br><span class="line">String userHome = System.getproperties().getProperty(&quot;user.home&quot;);</span><br><span class="line"> </span><br><span class="line">// Java实时运行环境的安装目录</span><br><span class="line">String javaPath = System.getproperties().getProperty(&quot;java.home&quot;);</span><br><span class="line"> </span><br><span class="line">// 操作系统名称</span><br><span class="line">String osName = System.getproperties().getProperty(&quot;os.name&quot;);</span><br><span class="line"> </span><br><span class="line">// 当前用户程序所在目录</span><br><span class="line">String userDir = System.getproperties().getProperty(&quot;user.dir&quot;);</span><br><span class="line"> </span><br><span class="line">// JDK的安装目录</span><br><span class="line">String jdkDir = System.getproperties().getProperty(&quot;java.ext.dirs&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>参考：<em>**</em><a href="https://blog.csdn.net/challenge_me/article/details/82975531" target="_blank" rel="noopener">用Java创建可适应Windows和Linux的文件路径</a></p>
 
-...
-            </p>
-        </div>
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2019年01月21日 00:52</p>
+        <p>原始链接： <a class="post-url" href="/2019/01/21/java路径学习总结/" title="java路径学习总结">http://vicwen.com/2019/01/21/java路径学习总结/</a></p>
+        <footer>
+            <a href="http://vicwen.com">
+                <img src="/images/logo.png" alt="wanzh">
+                wanzh
+            </a>
+        </footer>
+    </div>
+</div>
+
       
         
     </div>
@@ -161,54 +205,6 @@
         </ul>
         
             <a href="/2019/01/21/java路径学习总结/#more" class="article-more-link">more&gt;&gt;</a>
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/01/19/hello-world/">Hello World</a>
-    </h1>
-  
-
-          
-      </header>
-    
-    <div class="article-entry " itemprop="articleBody">
-      
-        <div class="article-img">
-            <a href="/2019/01/19/hello-world/">
-                
-                <img src="http://yoursite.com/images/banner.jpg" alt="Hello World" title="Hello World">
-                
-            </a>
-        </div>
-        <div class="article-feed">
-            <p>
-                Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on ...
-            </p>
-        </div>
-      
-        
-    </div>
-    <footer class="article-footer">
-        
-        <ul class="article-footer-menu">
-            
-                <li><i class="fa fa-calendar"></i>2019-01-19</li>
-            
-            
-        </ul>
-        
-            <a href="/2019/01/19/hello-world/#more" class="article-more-link">more&gt;&gt;</a>
         
     </footer>
   </div>
@@ -237,7 +233,7 @@
       <p>
         Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
         Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
-      &copy; 2019 John Doe<br>
+      &copy; 2019 wanzh<br>
       </p>
     </div>
   </div>
@@ -246,7 +242,7 @@
 <script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script>
   var mihoConfig = {
-      root: "http://yoursite.com",
+      root: "http://vicwen.com",
       animate: true,
       isHome: true,
       share: true,
