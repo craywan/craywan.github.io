@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>redis学习笔记总结 | ����&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="阿文's Blog">
+  
+  <meta name="description" content="redis学习总结一、redis的两种持久化方式RDB持久化是指定时间间隔将数据集写入磁盘中，通过fork出的子进程将数据集写入临时文件中，写入成功后，替换源文件并用二进制进行压缩。  AOF是以日志的方式记录redis的写和删除操作，从而实现数据集的持久化。  RDB： 1、优点： 灾难恢复友好：只产生一个文件，便于文件的备份和恢复 性能最优化：fork子进程来完成数据持久化，避免了服务进程的阻">
+<meta name="keywords" content="redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis学习笔记总结">
+<meta property="og:url" content="http://vicwen.com/2019/03/18/redis学习笔记总结/index.html">
+<meta property="og:site_name" content="����&#39;s Blog">
+<meta property="og:description" content="redis学习总结一、redis的两种持久化方式RDB持久化是指定时间间隔将数据集写入磁盘中，通过fork出的子进程将数据集写入临时文件中，写入成功后，替换源文件并用二进制进行压缩。  AOF是以日志的方式记录redis的写和删除操作，从而实现数据集的持久化。  RDB： 1、优点： 灾难恢复友好：只产生一个文件，便于文件的备份和恢复 性能最优化：fork子进程来完成数据持久化，避免了服务进程的阻">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/8986fad474ee46e1998daf1cfa180251/clipboard.png">
+<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/ac334a39cab54896bda8cacb4e899832/clipboard.png">
+<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/bef0adea0d3f40c8957714688477a157/clipboard.png">
+<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/e46de261df564799a3ba905fc3786b43/clipboard.png">
+<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/293c0ff84add4e048a92b217b7a551d0/clipboard.png">
+<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/115e73cbad43450b8d97e86002ed098a/clipboard.png">
+<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/a699fadc685d48ceaa1a77c8ed72a5aa/clipboard.png">
+<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/936ecaa26ee94de0aa100c342a8c69dd/clipboard.png">
+<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/9ddc332abc3d4fcfa10dbd5b1c989849/clipboard.png">
+<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/40a03e6b10154147aa6b0059d4cfde00/clipboard.png">
+<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/c9bbf2af351e4ec482cd4438698b3494/clipboard.png">
+<meta property="og:updated_time" content="2019-03-18T08:58:11.334Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis学习笔记总结">
+<meta name="twitter:description" content="redis学习总结一、redis的两种持久化方式RDB持久化是指定时间间隔将数据集写入磁盘中，通过fork出的子进程将数据集写入临时文件中，写入成功后，替换源文件并用二进制进行压缩。  AOF是以日志的方式记录redis的写和删除操作，从而实现数据集的持久化。  RDB： 1、优点： 灾难恢复友好：只产生一个文件，便于文件的备份和恢复 性能最优化：fork子进程来完成数据持久化，避免了服务进程的阻">
+<meta name="twitter:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/8986fad474ee46e1998daf1cfa180251/clipboard.png">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">阿文&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a href="/">
+                        <i class="fa fa-home"></i>
+                        <span>主页</span>
+                    </a>
+                    
+                    <a href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>about me</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        阿文&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        欢迎来到阿文&#39;s blog
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="awen" target="_blank" href="//vicawen.com">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/craywan/">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//github.com/craywan/">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="CSDN" target="_blank" href="//github.com/craywan/">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-redis学习笔记总结" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      redis学习笔记总结
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2019-03-18
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h3 id="redis学习总结"><a href="#redis学习总结" class="headerlink" title="redis学习总结"></a>redis学习总结</h3><h4 id="一、redis的两种持久化方式"><a href="#一、redis的两种持久化方式" class="headerlink" title="一、redis的两种持久化方式"></a>一、redis的两种持久化方式</h4><p>RDB持久化是指定时间间隔将数据集写入磁盘中，通过fork出的子进程将数据集写入临时文件中，写入成功后，替换源文件并用二进制进行压缩。</p>
+<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/8986fad474ee46e1998daf1cfa180251/clipboard.png" alt="img"></p>
+<p>AOF是以日志的方式记录redis的写和删除操作，从而实现数据集的持久化。</p>
+<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/ac334a39cab54896bda8cacb4e899832/clipboard.png" alt="img"></p>
+<p>RDB：</p>
+<p>1、优点：</p>
+<p>灾难恢复友好：只产生一个文件，便于文件的备份和恢复</p>
+<p>性能最优化：fork子进程来完成数据持久化，避免了服务进程的阻塞。</p>
+<p>启动效率高：相比于AOF来说，有较高的启动效率</p>
+<p>2、缺点</p>
+<p>无法保证高可用性、易丢失数据</p>
+<p>fork的子进程，容易产生服务器进程堵塞</p>
+<p>AOF</p>
+<p>1、优点：</p>
+<p>提供同步策略，保证数据安全。</p>
+<p>提供重写机制，简化日志大小。</p>
+<p>日志文件易于理解：日志文件时文本文件，便于查看。</p>
+<p>2、缺点：</p>
+<p>文件偏大：文件大小偏大</p>
+<p>效率偏低：因为提供了同步机制，导致执行效率降低。</p>
+<p>补充：AOF的3中同步方式：</p>
+<p>appendfsync always     #每次有数据修改发生时都会写入AOF文件。</p>
+<p>appendfsync everysec  #每秒钟同步一次，该策略为AOF的缺省策略。</p>
+<p>appendfsync no          #从不同步。高效但是数据不会被持久化。</p>
+<p>二、redis中管道的作用：可以实现异步请求，即一次可以发送多个命令请求，不用等待旧的请求响应。</p>
+<p>三、redis缓存系列问题：</p>
+<p>（一）redis缓存与数据库数据一致性的问题：</p>
+<p>可以采用修改数据库的同时更新缓存中的数据，或者删除缓存中对应的数据，当然若要求缓存与数据库要强制一致性的话，建议不使用缓存，</p>
+<p>（二）缓存击穿</p>
+<p>1、理解：请求的数据不在缓存中，导致短时间大量的请求直接访问数据库，导致数据库异常。</p>
+<p>2、解决方法：</p>
+<ul>
+<li>使用互斥排队锁：当根据key获取的value为null时，对value进行加锁，在从数据库中加载数据到缓存中，然后在释放锁。</li>
+<li>接口限流和熔断：对于并发量大的接口需要做限流处理。</li>
+<li>布隆过滤器：判断用户请求的key值是否存在于数据库中，若存在，则允许访问缓存，否则，拦截请求。</li>
+</ul>
+<p>（三）缓存雪崩：缓存中同一时间大量key失效。</p>
+<p>解决方法：</p>
+<ul>
+<li>加锁排队：</li>
+<li>备份缓存：建立一个备份缓存，且不设置key的失效时间，若缓存中不存在key对应的value，则从备份缓存中获取，并更新缓存数据。</li>
+</ul>
+<p><a href="https://blog.csdn.net/fanrenxiang/article/details/80542580" target="_blank" rel="noopener">https://blog.csdn.net/fanrenxiang/article/details/80542580</a></p>
+<p>四、redis主从复制：</p>
+<p>理解：主从刚刚连接时，使用全局同步，后面，则使用增量同步，当然从节点也可以主动发起全局同步。</p>
+<p><a href="https://www.cnblogs.com/kevingrace/p/5685332.html" target="_blank" rel="noopener">https://www.cnblogs.com/kevingrace/p/5685332.html</a></p>
+<p>五、redis数据结构原理讲解：</p>
+<p>（一）Redis是以键值对的形式来存放元素的，在创建键值对时，Redis会同时创建键和值两个对象，且Redis中的对象都是由redisObject结构来表示的：</p>
+<p>1、redisObject分析：</p>
+<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/bef0adea0d3f40c8957714688477a157/clipboard.png" alt="img"></p>
+<p>分析上述字段：</p>
+<p>type：表示对象对应的数据类型的编码。</p>
+<p>encoding：决定了对象底层数据结构的类型</p>
+<p>*prt；指向对象底层数据结构的地址指针</p>
+<p>2、Redis对应的编码如下：</p>
+<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/e46de261df564799a3ba905fc3786b43/clipboard.png" alt="img"></p>
+<p>（二）数据类型的底层实现：</p>
+<p>1、字符串类型：</p>
+<p>字符串底层编码可以为int、raw、embstr</p>
+<ul>
+<li>int：保存long类型表示的整数值，当int编码保存的值不是int或者超过了long类型的范围，则会自动转换为raw进行保存。</li>
+<li>raw：保存长度大于44的字符串</li>
+<li>embstr：保存长度小于44的字符串，且embstr编码针对短字符串的保存进行了优化。</li>
+</ul>
+<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/293c0ff84add4e048a92b217b7a551d0/clipboard.png" alt="img"></p>
+<p>从上图可得出：embstr编码在创建是会少分配一次空间，删除是少释放一次空间，且对象和所有数据连在一起，方便寻址。</p>
+<p>2、列表类型：</p>
+<p>列表的底层编码有ziplist、linkedlist（压缩列表和双向列表）</p>
+<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/115e73cbad43450b8d97e86002ed098a/clipboard.png" alt="img"></p>
+<p>当列表元素个数小于512且元素长度小于64字节时，使用ziplist编码。</p>
+<p>3、hash类型：</p>
+<p>hash类型的底层编码可以是ziplist（压缩列表）、hashtable（字典）</p>
+<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/a699fadc685d48ceaa1a77c8ed72a5aa/clipboard.png" alt="img"></p>
+<p>同样，当列表元素个数小于512且元素长度小于64字节时，使用ziplist编码。</p>
+<p>4、集合set类型：</p>
+<p>set类型的编码可以有intset（整数集合）、hashtable（字典）</p>
+<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/936ecaa26ee94de0aa100c342a8c69dd/clipboard.png" alt="img"></p>
+<p>当集合元素数量小于512且集合元素都为整数，就使用intset编码。</p>
+<p>5、有序集合：</p>
+<p>有序集合的编码可以是ziplist、skiplist</p>
+<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/9ddc332abc3d4fcfa10dbd5b1c989849/clipboard.png" alt="img"></p>
+<p>这里着重分析下跳表，skiplist编码底层结构是由zset实现的，zet结构同时包含了一个字典和一个跳表，而且这两种结构会通过指针来共享相同元素和分值，不会产生重复的元素，自所以要同时使用这两种结构，是因为他们之间存在互补关系，字典查询的时间复杂度为O(1)，但因为无需，所需每次进行范围操作都要排序，因此结合跳表可以更好的执行范围操作。</p>
+<p>ps：分析为何跳表的时间复杂度为O(logn)：</p>
+<p>跳表实质上是具有跳跃功能的双向链表，它和普通双向链表的区别在于跳表的后继指针是一个数组，其存放的不仅经是后继元素的位置，也存放了后继多个元素的位置，因此在查找元素的时候，不需要挨个遍历，可以直接跳到后面某个节点位置。</p>
+<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/40a03e6b10154147aa6b0059d4cfde00/clipboard.png" alt="img"></p>
+<p>（三）浅析redis中的字典及rehash原理：</p>
+<p>redis中的dict是通过渐进式哈希机制来实现的扩容操作，</p>
+<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/c9bbf2af351e4ec482cd4438698b3494/clipboard.png" alt="img"></p>
+<p>接下来分析一下完成渐进式哈希的几个关键的成员变量：</p>
+<ul>
+<li>dictht::table：hash数组，使用链地址法来解决hash冲突。</li>
+<li>dictht [2]：dict内部维护了两张表，用于数组扩容时的元素滚动。</li>
+<li>rehashidx：因为是渐进式hash，所用用rehashidx记录当前hash的进度。</li>
+</ul>
+<p>1、rehash的过程：</p>
+<p>Redis中的rehash是以桶为单位进行进行渐进式数据迁移操作，每一次只完成一个桶中的hash迁移，并用rehashidx记录hash进度，便于下一次迁移，这种操作大大的提升了redis的新能，特别是对解决redis单线程的局限性有很大的帮助。</p>
+<p><a href="https://blog.csdn.net/cqk0100/article/details/80400811" target="_blank" rel="noopener">https://blog.csdn.net/cqk0100/article/details/80400811</a></p>
+<p>六、浅析redis分布式锁的实现：</p>
+<p>分布式锁的实现方法有基于数据库乐观锁、基于redis实现、基Zookeeper实现，接下来就简单讲解下基于redis来实现分布式锁。</p>
+<p>（一）实现分布式锁必须满足的四个条件：</p>
+<ul>
+<li>互斥性：一次只能允许一个客户端获取锁。要保证互斥性，redis可以使用排它锁解决</li>
+<li>不能发生死锁：若客户端因崩溃而没有释放锁，也要保证其他客户端能获取锁，要保证不会发生死锁，可以给redis的锁设置失效时间，当超时后，就强制释放锁资源。</li>
+<li>加锁、解锁的客户端要相同：解铃还需系铃人。要保证一致性，可以给客户端设置一个编号，加锁时，传入编号作为value。</li>
+<li>容错性：只要大部分redis节点能正常运行，加锁、解锁就能进行。</li>
+</ul>
+<p>具体加锁、解锁代码如下：</p>
+<p>加锁：</p>
+<p>public class RedisTool {    private static final String LOCK_SUCCESS = “OK”;    private static final String SET_IF_NOT_EXIST = “NX”;    private static final String SET_WITH_EXPIRE_TIME = “PX”;    /*<em>     </em> 尝试获取分布式锁     <em> @param jedis Redis客户端     </em> @param lockKey 锁     <em> @param requestId 请求标识     </em> @param expireTime 超期时间     <em> @return 是否获取成功     </em>/    public static boolean tryGetDistributedLock(Jedis jedis, String lockKey, String requestId, int expireTime) {        String result = jedis.set(lockKey, requestId, SET_IF_NOT_EXIST, SET_WITH_EXPIRE_TIME, expireTime);        if (LOCK_SUCCESS.equals(result)) {            return true;        }        return false;    }}</p>
+<p>解锁：</p>
+<p>public class RedisTool {    private static final Long RELEASE_SUCCESS = 1L;    /*<em>     </em> 释放分布式锁     <em> @param jedis Redis客户端     </em> @param lockKey 锁     <em> @param requestId 请求标识     </em> @return 是否释放成功     */    public static boolean releaseDistributedLock(Jedis jedis, String lockKey, String requestId) {        String script = “if redis.call(‘get’, KEYS[1]) == ARGV[1] then return redis.call(‘del’, KEYS[1]) else return 0 end”;        Object result = jedis.eval(script, Collections.singletonList(lockKey), Collections.singletonList(requestId));        if (RELEASE_SUCCESS.equals(result)) {            return true;        }        return false;    }}</p>
+<p>参考：<a href="https://www.cnblogs.com/linjiqin/p/8003838.html" target="_blank" rel="noopener">https://www.cnblogs.com/linjiqin/p/8003838.html</a></p>
+<p>七、redis、memcache、ehcache的区别：</p>
+<p>1、redis和memcache的区别：</p>
+<ul>
+<li>redis支持更丰富的数据结构</li>
+<li>redis支持主从模式的数据备份</li>
+<li>redis可以进行持久化。</li>
+</ul>
+<p>2、redis和ehcache的区别：</p>
+<ul>
+<li>ehcache是直接在jVM中进行缓存，速度快效率高，但缓存共享比较麻烦，即一个程序无法直接获取另一个程序中的ehcache缓存。</li>
+<li>redis是有个独立的应用程序，速度相比ehcache较慢，但缓存共享和分布式缓存方面，有更成熟的方案。</li>
+</ul>
+<p>八、redis主从同步的理解：</p>
+<p>1、理解redis的主从同步机制：</p>
+<ul>
+<li>redis主从开始时候，进行全局同步，然后则就进行增量同步，当然从节点可以主动发起增量同步。</li>
+<li>主数据库可进行读写操作，进行写操作时会将写入的数据同步到从数据库中，而从数据库只有读操作。</li>
+<li>一个主数据库可以有多个从数据库，一个从数据库只能由一个主数据库。</li>
+</ul>
+<p>2、redis利用PSYNC完成主从同步的底层实现详解：</p>
+<ul>
+<li>从服务器根据自己是否保存有Master runid来判断是否是第一次复制，如果是则调用Psync ？ -1指令进行全局同步操作，若不是第一次，则向master节点发送PSYNC runid offset指令。</li>
+<li>Master节点接受到psync指令后，会先判断runid是否与本节点的runid一致，若一致，再判断offset的偏移量和本节点的偏移量差是否小于复制积压缓冲区的大小，若小于，则Master节点会将复制积压缓冲区中的命令发送给从节点。</li>
+<li>若runid与本机的runid不一致，或者offset偏移量和本机偏移量差大于复制积压缓冲区大小，则会返回FULLRESYNC runid offset，并进行全局同步操作。</li>
+</ul>
+<p>九、怎样从redis中取出满足条件的key列表:</p>
+<p>首先可以使用keys指令遍历并筛选数据，但在有业务运行的场景下，keys指令会长时间的堵塞redis，因此可以采用scan指令，无阻塞的获取指定模式的key列表。</p>
+<p><a href="https://www.cnblogs.com/Survivalist/p/8119891.html" target="_blank" rel="noopener">https://www.cnblogs.com/Survivalist/p/8119891.html</a></p>
+<p>九、redis集群中hash槽的讲解：</p>
+<p>1、redis集群没有使用一致性hash，而是使用了hash槽来解决分布式问题，每个redis节点会大致均匀的映射到相同数量的hash槽。当向redis中插入key时，redsi会对key进行crc16校验，然后在对16384取模，确定出对象的hash槽位置。之所以不使用hash槽来实现，是因为虽然没有一一致性hash灵活，但简单可靠，节点处理也很方便。</p>
+<p><a href="https://blog.csdn.net/tianyeshiye/article/details/79600014" target="_blank" rel="noopener">https://blog.csdn.net/tianyeshiye/article/details/79600014</a></p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2019年03月18日 16:58</p>
+        <p>原始链接： <a class="post-url" href="/2019/03/18/redis学习笔记总结/" title="redis学习笔记总结">http://vicwen.com/2019/03/18/redis学习笔记总结/</a></p>
+        <footer>
+            <a href="http://vicwen.com">
+                <img src="/images/logo.png" alt="wanzh">
+                wanzh
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://vicwen.com/2019/03/18/redis学习笔记总结/&title=《redis学习笔记总结》 — ����'s Blog&pic=/images/banner.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://vicwen.com/2019/03/18/redis学习笔记总结/&title=《redis学习笔记总结》 — ����'s Blog&source=���Լ�" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://vicwen.com/2019/03/18/redis学习笔记总结/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《redis学习笔记总结》 — ����'s Blog&url=http://vicwen.com/2019/03/18/redis学习笔记总结/&via=http://vicwen.com" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://vicwen.com/2019/03/18/redis学习笔记总结/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://vicwen.com/2019/03/18/redis学习笔记总结/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/redis/" class="color1">redis</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#redis学习总结"><span class="post-toc-text">redis学习总结</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#一、redis的两种持久化方式"><span class="post-toc-text">一、redis的两种持久化方式</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2019/02/14/Java线程池讲解/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Java线程池讲解</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2019 wanzh<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "http://vicwen.com",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/JAVA并发/" style="font-size: 10px;">JAVA并发</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/java实践/" style="font-size: 20px;">java实践</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a href="/">
+                    <i class="fa fa-home"></i><span>主页</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/about">
+                    <i class="fa fa-user"></i><span>about me</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/JAVA并发/" style="font-size: 10px;">JAVA并发</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/java实践/" style="font-size: 20px;">java实践</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
