@@ -16,13 +16,13 @@
 <meta property="og:site_name" content="����&#39;s Blog">
 <meta property="og:description" content="垃圾回收机制讲解（一） 垃圾回收机制一直是jvm中的比较重要的一部分，是jvm管理内存的一个重要的手段和技术，接下来我们就来见识一下这门独特的机制。一、垃圾回收机制的作用1、监控作用：垃圾回收机制会跟踪和监控每一个java对象，判断每一个对象是否可以被回收（若java对象进入了不可达状态，则认为对象可被回收） 2、回收作用:回收垃圾对象并清理回收过程中产生的垃圾。 二、jvm内存结构中哪些需要被回">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://vicwen.com/jvm/code1.png">
+<meta property="og:image" content="http://vicwen.com/2019/01/25/jvm垃圾回收机制总结（一）/code1.png">
 <meta property="og:image" content="http://vicwen.com/2019/01/25/jvm垃圾回收机制总结（一）/code2.png">
-<meta property="og:updated_time" content="2019-01-25T14:26:57.674Z">
+<meta property="og:updated_time" content="2019-03-29T13:14:17.407Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jvm垃圾回收机制总结（一）">
 <meta name="twitter:description" content="垃圾回收机制讲解（一） 垃圾回收机制一直是jvm中的比较重要的一部分，是jvm管理内存的一个重要的手段和技术，接下来我们就来见识一下这门独特的机制。一、垃圾回收机制的作用1、监控作用：垃圾回收机制会跟踪和监控每一个java对象，判断每一个对象是否可以被回收（若java对象进入了不可达状态，则认为对象可被回收） 2、回收作用:回收垃圾对象并清理回收过程中产生的垃圾。 二、jvm内存结构中哪些需要被回">
-<meta name="twitter:image" content="http://vicwen.com/jvm/code1.png">
+<meta name="twitter:image" content="http://vicwen.com/2019/01/25/jvm垃圾回收机制总结（一）/code1.png">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -153,7 +153,7 @@
 <p>​        优点：执行速度快，交织运行在程序中</p>
 <p>​        缺点：无法解决循环引用的问题。</p>
 <p> （2）代码实例</p>
-<p>​        <img src="/jvm/code1.png" alt="image code"></p>
+<p>​        <img src="/2019/01/25/jvm垃圾回收机制总结（一）/code1.png" alt="image code"></p>
 <p>​        上述两个对象最终的计数器值为1，因此上述两个对象永远不会被回收掉。</p>
 <h4 id="（二）可达性分析算法"><a href="#（二）可达性分析算法" class="headerlink" title="（二）可达性分析算法"></a>（二）可达性分析算法</h4><p>1、对象状态：对象的创建后一共有三个状态</p>
 <p>​    （1）可达状态：当对象被创建后，存在一个及以上的引用就为可达状态。</p>
@@ -182,7 +182,7 @@
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年01月25日 22:26</p>
+        <p>最后更新： 2019年03月29日 21:14</p>
         <p>原始链接： <a class="post-url" href="/2019/01/25/jvm垃圾回收机制总结（一）/" title="jvm垃圾回收机制总结（一）">http://vicwen.com/2019/01/25/jvm垃圾回收机制总结（一）/</a></p>
         <footer>
             <a href="http://vicwen.com">
@@ -240,7 +240,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://vicwen.com/2019/01/25/jvm垃圾回收机制总结（一）/&title=《jvm垃圾回收机制总结（一）》 — ����'s Blog&pic=./jvm/code2.png" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://vicwen.com/2019/01/25/jvm垃圾回收机制总结（一）/&title=《jvm垃圾回收机制总结（一）》 — ����'s Blog&pic=jvm/code2.png" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
