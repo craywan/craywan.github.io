@@ -3,27 +3,25 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>JDK源码解析--Object | ����&#39;s Blog</title>
+  <title>JDK源码解析-String（上） | ����&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
     <meta name="keywords" content="阿文's Blog">
   
-  <meta name="description" content="JDK源码解析–Object类 概述：&amp;nbsp;&amp;nbsp; Object是java中所有类的父类，java中的所有类都默认继承了Object父类，当然Object中的所有共有方法都将会被每个类继承。&amp;nbsp;&amp;nbsp; Object中实现的方法如下：   核心方法解析：一、equals方法：&amp;nbsp;&amp;nbsp; Object默认实现的equals方法是通过比较两个对象的地址值实现的，但">
+  <meta name="description" content="JDK源码解析-String类 String类是java.lang包下的一个不可变类，也是java开发中经常使用的一个类，接下来，阿文就对String的底层源码实现一探究竟。    一、String类的类和属性定义： 12345678910111213//类的定义public final class String    implements java.io.Serializable, Compa">
 <meta name="keywords" content="jDK源码学习系列">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JDK源码解析--Object">
-<meta property="og:url" content="http://vicwen.com/2019/03/30/JDK源码解析-Object/index.html">
+<meta property="og:title" content="JDK源码解析-String（上）">
+<meta property="og:url" content="http://vicwen.com/2019/03/30/2019.3/JDK源码解析-String（上）/index.html">
 <meta property="og:site_name" content="����&#39;s Blog">
-<meta property="og:description" content="JDK源码解析–Object类 概述：&amp;nbsp;&amp;nbsp; Object是java中所有类的父类，java中的所有类都默认继承了Object父类，当然Object中的所有共有方法都将会被每个类继承。&amp;nbsp;&amp;nbsp; Object中实现的方法如下：   核心方法解析：一、equals方法：&amp;nbsp;&amp;nbsp; Object默认实现的equals方法是通过比较两个对象的地址值实现的，但">
+<meta property="og:description" content="JDK源码解析-String类 String类是java.lang包下的一个不可变类，也是java开发中经常使用的一个类，接下来，阿文就对String的底层源码实现一探究竟。    一、String类的类和属性定义： 12345678910111213//类的定义public final class String    implements java.io.Serializable, Compa">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://vicwen.com/2019/03/30/JDK源码解析-Object/Object1.jpg">
-<meta property="og:image" content="http://vicwen.com/2019/03/30/JDK源码解析-Object/Object2.png">
-<meta property="og:image" content="http://vicwen.com/2019/03/30/JDK源码解析-Object/Object3.png">
-<meta property="og:updated_time" content="2019-03-30T10:15:46.993Z">
+<meta property="og:image" content="http://vicwen.com/2019/03/30/2019.3/JDK源码解析-String（上）/String1.png">
+<meta property="og:updated_time" content="2019-03-30T10:14:08.974Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JDK源码解析--Object">
-<meta name="twitter:description" content="JDK源码解析–Object类 概述：&amp;nbsp;&amp;nbsp; Object是java中所有类的父类，java中的所有类都默认继承了Object父类，当然Object中的所有共有方法都将会被每个类继承。&amp;nbsp;&amp;nbsp; Object中实现的方法如下：   核心方法解析：一、equals方法：&amp;nbsp;&amp;nbsp; Object默认实现的equals方法是通过比较两个对象的地址值实现的，但">
-<meta name="twitter:image" content="http://vicwen.com/2019/03/30/JDK源码解析-Object/Object1.jpg">
+<meta name="twitter:title" content="JDK源码解析-String（上）">
+<meta name="twitter:description" content="JDK源码解析-String类 String类是java.lang包下的一个不可变类，也是java开发中经常使用的一个类，接下来，阿文就对String的底层源码实现一探究竟。    一、String类的类和属性定义： 12345678910111213//类的定义public final class String    implements java.io.Serializable, Compa">
+<meta name="twitter:image" content="http://vicwen.com/2019/03/30/2019.3/JDK源码解析-String（上）/String1.png">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -114,14 +112,14 @@
     </div>
 </header>
       <div class="outer">
-        <section id="main" class="body-wrap"><article id="post-JDK源码解析-Object" class="article article-type-post" itemscope="" itemprop="blogPost">
+        <section id="main" class="body-wrap"><article id="post-2019.3/JDK源码解析-String（上）" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="post-title" itemprop="name">
-      JDK源码解析--Object
+      JDK源码解析-String（上）
     </h1>
     <div class="post-title-bar">
       <ul>
@@ -143,31 +141,108 @@
     <div class="article-entry post-content" itemprop="articleBody">
       
             
-            <h2 id="JDK源码解析–Object类"><a href="#JDK源码解析–Object类" class="headerlink" title="JDK源码解析–Object类"></a><center>JDK源码解析–Object类</center></h2><hr>
-<h3 id="概述："><a href="#概述：" class="headerlink" title="概述："></a>概述：</h3><p>&nbsp;&nbsp; Object是java中所有类的父类，java中的所有类都默认继承了Object父类，当然Object中的所有共有方法都将会被每个类继承。<br>&nbsp;&nbsp; Object中实现的方法如下：<br><img src="/2019/03/30/JDK源码解析-Object/Object1.jpg" alt="object1">  </p>
-<h3 id="核心方法解析："><a href="#核心方法解析：" class="headerlink" title="核心方法解析："></a>核心方法解析：</h3><h4 id="一、equals方法："><a href="#一、equals方法：" class="headerlink" title="一、equals方法："></a>一、equals方法：</h4><p>&nbsp;&nbsp; Object默认实现的equals方法是通过比较两个对象的地址值实现的，但在实际情况的对象比较中，往往不会去比较对象的地址值，因此大多数情况是需要重写equals方法。<br>&nbsp;&nbsp; ==equals方法的重写必须要遵循如下原则==  </p>
+            <h3 id="JDK源码解析-String类"><a href="#JDK源码解析-String类" class="headerlink" title=" JDK源码解析-String类 "></a><center> JDK源码解析-String类 </center></h3><p>String类是java.lang包下的一个不可变类，也是java开发中经常使用的一个类，接下来，阿文就对String的底层源码实现一探究竟。  </p>
+<hr>
+<h4 id="一、String类的类和属性定义："><a href="#一、String类的类和属性定义：" class="headerlink" title="一、String类的类和属性定义："></a>一、String类的类和属性定义：</h4><p><code></code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">//类的定义</span><br><span class="line">public final class String</span><br><span class="line">    implements java.io.Serializable, Comparable&lt;String&gt;, CharSequence &#123;&#125;</span><br><span class="line">    </span><br><span class="line">    //属性的定义</span><br><span class="line">    /**用来存储字符串  */</span><br><span class="line">private final char value[];</span><br><span class="line"></span><br><span class="line">/** 缓存字符串的哈希码 */</span><br><span class="line">private int hash; // Default to 0</span><br><span class="line"></span><br><span class="line">/** 实现序列化的标识 */</span><br><span class="line">private static final long serialVersionUID = -6849794470754667710L;</span><br></pre></td></tr></table></figure>
+<p><code></code></p>
+<p>   通过String类的定义可知，其通过serializable接口实现序列化，Comparable实现了String对象的比较，CharSequence接口表明是一个有序集合。通过属地可以看出，其底层也是通过字符数组来实现的字符串的存储。  </p>
+<h4 id="二、构造方法："><a href="#二、构造方法：" class="headerlink" title="二、构造方法："></a>二、构造方法：</h4><p>​    String支持很丰富的构造方法，字符串、字符数组、字节数组、StringBuffer都可以作为构造方法的参数。</p>
+<p>​        <img src="/2019/03/30/2019.3/JDK源码解析-String（上）/String1.png" alt="String1"></p>
+<h4 id="三、equals和hashCode方法："><a href="#三、equals和hashCode方法：" class="headerlink" title="三、equals和hashCode方法："></a>三、equals和hashCode方法：</h4><pre><code>   //equals方法会逐个比较字符value数组的值，若存在不同则返回false
+   public boolean equals(Object anObject) {
+    if (this == anObject) {
+        return true;
+    }
+    if (anObject instanceof String) {
+        String anotherString = (String)anObject;
+        int n = value.length;
+        if (n == anotherString.value.length) {
+            char v1[] = value;
+            char v2[] = anotherString.value;
+            int i = 0;
+            while (n-- != 0) {
+                if (v1[i] != v2[i])
+                    return false;
+                i++;
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
+//String的hashCode方法
+public int hashCode() {
+        int h = hash;
+        if (h == 0 &amp;&amp; value.length &gt; 0) {
+            char val[] = value;
+
+            for (int i = 0; i &lt; value.length; i++) {
+                h = 31 * h + val[i];
+            }
+            hash = h;
+        }
+        return h;
+    }
+</code></pre><p>String的hashCode方法主要是通过循环对char数据的每个值进行运算得到的，且利用31作为乘积因子，之所要选取31，原因如下：</p>
 <ul>
-<li>自反性</li>
-<li>对称性</li>
-<li>传递性</li>
-<li>一致性</li>
-<li>非空性<br>&nbsp;&nbsp; 下面给出常见的重写方法实现：</li>
+<li>31是一个大小适合的质数，且选取31最后返回的hash值分布最为均匀，是hashCode因子的优选质数。</li>
+<li>JVM会对31进行运算优化，31*i=(i&lt;&lt;5)-i;转换为位运算，提高了运算速度。  </li>
 </ul>
-<p>注意不要给具有继承关系的父子类之间实现equals方法，否则会违法对称性、传递性的规则。  </p>
-<h4 id="二、hashCode方法："><a href="#二、hashCode方法：" class="headerlink" title="二、hashCode方法："></a>二、hashCode方法：</h4><p>hashcode方法会为每个对象生成一个hash值，一般返回的是内存地址值计算出的值；java规定在重写equals后，一定要重写hashCode方法。<br>&nbsp;&nbsp; 重写hashCode遵循的原则：  </p>
-<ul>
-<li>同一对象多次调用hashCode返回的值一定要相同。</li>
-<li>equals相等的两对象，hashCode一定要相同。</li>
-<li>hashCode相同的对象，equals可以不相等。<br> &nbsp;&nbsp; 下面给出常见的hashCode实现：<br> <img src="/2019/03/30/JDK源码解析-Object/Object2.png" alt="object1"> <h4 id="三、clone方法："><a href="#三、clone方法：" class="headerlink" title="三、clone方法："></a>三、clone方法：</h4>&nbsp;&nbsp; clone方法的需要实现cloneable接口，该接口没有定义任何方法，其次还要重写clone方法，并把clone方法由protected改为public，且在重写时需要调==用super.clone来实现具体的克隆操作==。<br>&nbsp;&nbsp; clone方法将创建和返回该对象的一个拷贝。这个“拷贝”的精确含义取决于该对象的类。一般的含义是，对于任何对象x，表达式x.clone() != x 将会是true，并且，表达式x.clone().getClass() == x.getClass()将会是true。并且通常情况下，表达式x.clone().equals(x)将会是true。<br>clone的优点：  </li>
-</ul>
-<p><img src="/2019/03/30/JDK源码解析-Object/Object3.png" alt="object1"> </p>
-<p>使用clone方法的优点：<br>（1）速度快。clone方法最终会调用Object.clone()方法，这是一个native方法，本质是内存块复制，所以在速度上比使用new创建对象要快。<br>（2）灵活。可以在运行时动态的获取对象的类型以及状态，从而创建一个对象。当然，使用clone方法创建对象的缺点同样非常明显：<br>（3）实现深拷贝较为困难，需要整个类继承系列的所有类都很好的实现clone方法。<br>（4）需要处理CloneNotSupportedException异常。Object类中的clone方法被声明为可能会抛出CloneNotSupportedException，因此在子类中，需要对这一异常进行处理。  </p>
-<h4 id="其他方法："><a href="#其他方法：" class="headerlink" title="其他方法："></a>其他方法：</h4><p>Object下还包含其他的方法：<br>-toString：输出对象信息，一般必须要重写，可以利用IDEA的快捷方式生成。<br>-registerNatives：是本地方法，不能重写，主要用于服务JNI。<br>-getClass：本地方法，返回运行时的class对象。<br>-wait、notify、notifyAll：本地方法，用于多线程通信的场景。<br>-finalize：主要用于销毁对象资源，一般本JVM调用释放即将被回收对象的资源。但往往不建议使用，因为jvm不知道何时执行finalize方法，且不同jvm上的回收算法都不一致，所以执行finalize方法可能是对象的销毁操作变得更慢。<br><a href="https:// https://www.jianshu.com/p/4791207253a0" target="_blank" rel="noopener">参考</a></p>
+<h4 id="四、charAt、indexOf、concat方法："><a href="#四、charAt、indexOf、concat方法：" class="headerlink" title="四、charAt、indexOf、concat方法："></a>四、charAt、indexOf、concat方法：</h4><p><code></code></p>
+<pre><code> //charAt方法，回去对应下标的字符。
+ public char charAt(int index) {
+   //如果传入的索引大于字符串的长度或者小于0，直接抛出索引越界异常
+    if ((index &lt; 0) || (index &gt;= value.length)) {
+        throw new StringIndexOutOfBoundsException(index);
+    }
+    return value[index];//返回指定索引的单个字符
+}
+
+//indexOf回去对应元素字符的下标，传入的是字符的unicode码。
+//fromIndex表示重fromIndex下标开始。
+public int indexOf(int ch, int fromIndex) {
+    final int max = value.length;//max等于字符的长度
+    if (fromIndex &lt; 0) {//指定索引的位置如果小于0，默认从 0 开始搜索
+        fromIndex = 0;
+    } else if (fromIndex &gt;= max) {
+        //如果指定索引值大于等于字符的长度（因为是数组，下标最多只能是max-1），直接返回-1
+        return -1;
+    }
+
+    if (ch &lt; Character.MIN_SUPPLEMENTARY_CODE_POINT) {//一个char占用两个字节，如果ch小于2的16次方（65536），绝大多数字符都在此范围内
+        final char[] value = this.value;
+        for (int i = fromIndex; i &lt; max; i++) {//for循环依次判断字符串每个字符是否和指定字符相等
+            if (value[i] == ch) {
+                return i;//存在相等的字符，返回第一次出现该字符的索引位置，并终止循环
+            }
+        }
+        return -1;//不存在相等的字符，则返回 -1
+    } else {//当字符大于 65536时，处理的少数情况，该方法会首先判断是否是有效字符，然后依次进行比较
+        return indexOfSupplementary(ch, fromIndex);
+    }
+}
+
+//concat方法，在字符串后面追加str字符串。返回新的字符串对象。
+public String concat(String str) {
+        int otherLen = str.length();
+        if (otherLen == 0) {
+            return this;
+        }
+        int len = value.length;
+        char buf[] = Arrays.copyOf(value, len + otherLen);
+        str.getChars(buf, len);
+        return new String(buf, true);
+    }
+</code></pre><p><code></code></p>
+<p>当然除了上述方法，还有split、substring、compareTo、compareToIngnoreCase等方法。</p>
+<p>参考：<a href="https://www.cnblogs.com/ysocean/p/8571426.html#_label0" target="_blank" rel="noopener">https://www.cnblogs.com/ysocean/p/8571426.html#_label0</a></p>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年03月30日 18:15</p>
-        <p>原始链接： <a class="post-url" href="/2019/03/30/JDK源码解析-Object/" title="JDK源码解析--Object">http://vicwen.com/2019/03/30/JDK源码解析-Object/</a></p>
+        <p>最后更新： 2019年03月30日 18:14</p>
+        <p>原始链接： <a class="post-url" href="/2019/03/30/2019.3/JDK源码解析-String（上）/" title="JDK源码解析-String（上）">http://vicwen.com/2019/03/30/2019.3/JDK源码解析-String（上）/</a></p>
         <footer>
             <a href="http://vicwen.com">
                 <img src="/images/logo.png" alt="wanzh">
@@ -224,7 +299,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://vicwen.com/2019/03/30/JDK源码解析-Object/&title=《JDK源码解析--Object》 — ����'s Blog&pic=./JDK源码解析-Object/Object1.jpg" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://vicwen.com/2019/03/30/2019.3/JDK源码解析-String（上）/&title=《JDK源码解析-String（上）》 — ����'s Blog&pic=http://vicwen.comimages/logo.png" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -234,22 +309,22 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://vicwen.com/2019/03/30/JDK源码解析-Object/&title=《JDK源码解析--Object》 — ����'s Blog&source=���Լ�" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://vicwen.com/2019/03/30/2019.3/JDK源码解析-String（上）/&title=《JDK源码解析-String（上）》 — ����'s Blog&source=���Լ�" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
           <li>
-            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://vicwen.com/2019/03/30/JDK源码解析-Object/" data-title="Facebook">
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://vicwen.com/2019/03/30/2019.3/JDK源码解析-String（上）/" data-title="Facebook">
               <i class="fa fa-facebook"></i>
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JDK源码解析--Object》 — ����'s Blog&url=http://vicwen.com/2019/03/30/JDK源码解析-Object/&via=http://vicwen.com" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JDK源码解析-String（上）》 — ����'s Blog&url=http://vicwen.com/2019/03/30/2019.3/JDK源码解析-String（上）/&via=http://vicwen.com" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
           <li>
-            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://vicwen.com/2019/03/30/JDK源码解析-Object/" data-title="Google+">
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://vicwen.com/2019/03/30/2019.3/JDK源码解析-String（上）/" data-title="Google+">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -259,7 +334,7 @@
 <div class="post-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;" id="wxShare-close">×</a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://vicwen.com/2019/03/30/JDK源码解析-Object/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://vicwen.com/2019/03/30/2019.3/JDK源码解析-String（上）/" alt="微信分享二维码">
 </div>
 
 <div class="mask"></div>
@@ -284,26 +359,16 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#JDK源码解析–Object类"><span class="post-toc-text">JDK源码解析–Object类</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#概述："><span class="post-toc-text">概述：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#核心方法解析："><span class="post-toc-text">核心方法解析：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#一、equals方法："><span class="post-toc-text">一、equals方法：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#二、hashCode方法："><span class="post-toc-text">二、hashCode方法：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#三、clone方法："><span class="post-toc-text">三、clone方法：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#其他方法："><span class="post-toc-text">其他方法：</span></a></li></ol></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#JDK源码解析-String类"><span class="post-toc-text"> JDK源码解析-String类 </span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#一、String类的类和属性定义："><span class="post-toc-text">一、String类的类和属性定义：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#二、构造方法："><span class="post-toc-text">二、构造方法：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#三、equals和hashCode方法："><span class="post-toc-text">三、equals和hashCode方法：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#四、charAt、indexOf、concat方法："><span class="post-toc-text">四、charAt、indexOf、concat方法：</span></a></li></ol></li></ol>
         </nav>
     </aside>
     
 
 <nav id="article-nav">
   
-    <a href="/2019/03/30/2019.3/JDK源码解析-String（上）/" id="article-nav-newer" class="article-nav-link-wrap">
-
-      <span class="article-nav-title">
-        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
-        
-          JDK源码解析-String（上）
-        
-      </span>
-    </a>
   
-  
-    <a href="/2019/03/29/redis知识点总结（一）/" id="article-nav-older" class="article-nav-link-wrap">
-      <span class="article-nav-title">redis知识点总结（一）</span>
+    <a href="/2019/03/30/JDK源码解析-Object/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">JDK源码解析--Object</span>
       <i class="fa fa-hand-o-right" aria-hidden="true"></i>
     </a>
   
