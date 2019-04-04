@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>TOP K问题解析 | ����&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="阿文's Blog">
+  
+  <meta name="description" content="TOP K问题解析一、引言：TOP K问题是面试过程中非常常见算法问题，通俗的解释就是求一组数中第K大或者第K小的数值，当然也可能会变形求前K大或前K小的数，对于这类问题，可以通过构建大/小顶堆或快排原理进行解决，接下来，阿文就就和下面实例来讲讲解决TOP K问题的具体算法。 二、问题描述：​    输入n个整数，找出其中最小的K个数。例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个">
+<meta name="keywords" content="浅析算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TOP K问题解析">
+<meta property="og:url" content="http://vicwen.com/2019/04/04/2019.4/TOP-K问题解析/index.html">
+<meta property="og:site_name" content="����&#39;s Blog">
+<meta property="og:description" content="TOP K问题解析一、引言：TOP K问题是面试过程中非常常见算法问题，通俗的解释就是求一组数中第K大或者第K小的数值，当然也可能会变形求前K大或前K小的数，对于这类问题，可以通过构建大/小顶堆或快排原理进行解决，接下来，阿文就就和下面实例来讲讲解决TOP K问题的具体算法。 二、问题描述：​    输入n个整数，找出其中最小的K个数。例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-04-04T09:26:28.210Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TOP K问题解析">
+<meta name="twitter:description" content="TOP K问题解析一、引言：TOP K问题是面试过程中非常常见算法问题，通俗的解释就是求一组数中第K大或者第K小的数值，当然也可能会变形求前K大或前K小的数，对于这类问题，可以通过构建大/小顶堆或快排原理进行解决，接下来，阿文就就和下面实例来讲讲解决TOP K问题的具体算法。 二、问题描述：​    输入n个整数，找出其中最小的K个数。例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">阿文&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a href="/">
+                        <i class="fa fa-home"></i>
+                        <span>主页</span>
+                    </a>
+                    
+                    <a href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>about me</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        阿文&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        欢迎来到阿文&#39;s blog
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="awen" target="_blank" href="//vicawen.com">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/craywan/">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//github.com/craywan/">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="CSDN" target="_blank" href="//github.com/craywan/">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-2019.4/TOP-K问题解析" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      TOP K问题解析
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2019-04-04
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h3 id="TOP-K问题解析"><a href="#TOP-K问题解析" class="headerlink" title="TOP K问题解析"></a>TOP K问题解析</h3><h4 id="一、引言："><a href="#一、引言：" class="headerlink" title="一、引言："></a>一、引言：</h4><pre><code>TOP K问题是面试过程中非常常见算法问题，通俗的解释就是求一组数中第K大或者第K小的数值，当然也可能会变形求前K大或前K小的数，对于这类问题，可以通过构建大/小顶堆或快排原理进行解决，接下来，阿文就就和下面实例来讲讲解决TOP K问题的具体算法。
+</code></pre><h4 id="二、问题描述："><a href="#二、问题描述：" class="headerlink" title="二、问题描述："></a>二、问题描述：</h4><p>​    输入n个整数，找出其中最小的K个数。例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4,。  </p>
+<h4 id="三、算法描述："><a href="#三、算法描述：" class="headerlink" title="三、算法描述："></a>三、算法描述：</h4><h5 id="解法一、构建大顶堆："><a href="#解法一、构建大顶堆：" class="headerlink" title="解法一、构建大顶堆："></a>解法一、构建大顶堆：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">public ArrayList&lt;Integer&gt; GetLeastNumbers_Solution(int [] input, int k) &#123;</span><br><span class="line">        ArrayList&lt;Integer&gt; resultList = new ArrayList&lt;Integer&gt;();</span><br><span class="line">        if(input.length&lt;=0||input.length&lt;k||k&lt;=0)&#123;</span><br><span class="line">            return resultList;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        //此处利用PriorityQueue构建了节点个数为K一个大顶堆，</span><br><span class="line">        //用于维护当前遍历的最小的K个元素。</span><br><span class="line">        PriorityQueue&lt;Integer&gt; maxHeap = new PriorityQueue&lt;Integer&gt;(k,new Comparator&lt;Integer&gt;()&#123;</span><br><span class="line">                  public int compare(Integer o1,Integer o2)&#123;</span><br><span class="line">                      return o2.compareTo(o1);</span><br><span class="line">                  &#125;                                                      </span><br><span class="line">                            调整堆                                        &#125; ); </span><br><span class="line">       //遍历元素，若堆中元素小于K个，则插入元素，若大于等于K个，</span><br><span class="line">       //则将当前遍历的元素与堆顶元素比较，若比堆顶元素小，则与堆顶元素交换</span><br><span class="line">       //并且调整堆。</span><br><span class="line">        for(int i=0;i&lt;input.length;i++)&#123;</span><br><span class="line">        if(maxHeap.size()!=k)&#123;</span><br><span class="line">            maxHeap.offer(input[i]);</span><br><span class="line">        &#125;else if(maxHeap.peek()&gt;input[i])&#123;</span><br><span class="line">            //入堆</span><br><span class="line">            maxHeap.poll();</span><br><span class="line">            maxHeap.offer(input[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">   for(Integer in:maxHeap)&#123;</span><br><span class="line">       resultList.add(in);</span><br><span class="line">   &#125;</span><br><span class="line">    return resultList;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>构建大顶堆其实是非常复杂的，每次插入元素都要动态的维护堆的顺序，时间复杂度较高</p>
+<h5 id="解法二、利用快排原理："><a href="#解法二、利用快排原理：" class="headerlink" title="解法二、利用快排原理："></a>解法二、利用快排原理：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">public ArrayList&lt;Integer&gt; GetLeastNumbers_Solution(int [] input, int k) &#123;</span><br><span class="line">        ArrayList&lt;Integer&gt; list = new ArrayList&lt;Integer&gt;();</span><br><span class="line">       if(input==null||k&lt;=0||k&gt;input.length)&#123;</span><br><span class="line">           return  list;</span><br><span class="line">       &#125;</span><br><span class="line">       //利用quickSort确定出第K小的数的下标</span><br><span class="line">       int index=quickSort(input,k,0,input.length-1);</span><br><span class="line">      </span><br><span class="line">       for(int i=0;i&lt;=index;i++)&#123;</span><br><span class="line">           list.add(input[i]);</span><br><span class="line">       &#125;</span><br><span class="line">       return list;</span><br><span class="line">   &#125;</span><br><span class="line">	</span><br><span class="line">  public int quickSort(int[] arr,int k,int left,int right)&#123;</span><br><span class="line">      if(left==right)&#123;</span><br><span class="line">          return right;</span><br><span class="line">      &#125;</span><br><span class="line">      //获取到中间值</span><br><span class="line">      int index=partition(arr,left,right);</span><br><span class="line">      System.out.println(index);</span><br><span class="line">      //比较中间值与K的大小，知道等于才停止递归，这里利用尾递归来实现</span><br><span class="line">      if(index-left+1==k)&#123;</span><br><span class="line">          return index; </span><br><span class="line">      &#125;else if(index-left+1&gt;k)&#123;</span><br><span class="line">          return quickSort(arr,k,left,index-1);</span><br><span class="line">      &#125;else&#123;</span><br><span class="line">          return quickSort(arr,k-index+left-1,index+1,right);</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  //该方法就是快排的方法，返回中间值，值左边的都比它小，右边的都比它大</span><br><span class="line">  public int partition(int[] arr,int left,int right)&#123;</span><br><span class="line">      int temp=arr[left];</span><br><span class="line">      while(left&lt;right)&#123;</span><br><span class="line">          while(left&lt;right&amp;&amp;arr[right]&gt;=temp)&#123;</span><br><span class="line">              right--;</span><br><span class="line">          &#125;</span><br><span class="line">          arr[left]=arr[right];</span><br><span class="line">          while(left&lt;right&amp;&amp;arr[left]&lt;=temp)&#123;</span><br><span class="line">              left++;</span><br><span class="line">          &#125;</span><br><span class="line">           arr[right]=arr[left];   </span><br><span class="line">      &#125;</span><br><span class="line">      arr[right]=temp;</span><br><span class="line">      return right;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>利用快排原理来实现，其时间复杂度在O(n2)级别。</p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2019年04月04日 17:26</p>
+        <p>原始链接： <a class="post-url" href="/2019/04/04/2019.4/TOP-K问题解析/" title="TOP K问题解析">http://vicwen.com/2019/04/04/2019.4/TOP-K问题解析/</a></p>
+        <footer>
+            <a href="http://vicwen.com">
+                <img src="/images/logo.png" alt="wanzh">
+                wanzh
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://vicwen.com/2019/04/04/2019.4/TOP-K问题解析/&title=《TOP K问题解析》 — ����'s Blog&pic=http://vicwen.comimages/logo.png" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://vicwen.com/2019/04/04/2019.4/TOP-K问题解析/&title=《TOP K问题解析》 — ����'s Blog&source=���Լ�" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://vicwen.com/2019/04/04/2019.4/TOP-K问题解析/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《TOP K问题解析》 — ����'s Blog&url=http://vicwen.com/2019/04/04/2019.4/TOP-K问题解析/&via=http://vicwen.com" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://vicwen.com/2019/04/04/2019.4/TOP-K问题解析/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://vicwen.com/2019/04/04/2019.4/TOP-K问题解析/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/浅析算法/" class="color5">浅析算法</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#TOP-K问题解析"><span class="post-toc-text">TOP K问题解析</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#一、引言："><span class="post-toc-text">一、引言：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#二、问题描述："><span class="post-toc-text">二、问题描述：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#三、算法描述："><span class="post-toc-text">三、算法描述：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#解法一、构建大顶堆："><span class="post-toc-text">解法一、构建大顶堆：</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#解法二、利用快排原理："><span class="post-toc-text">解法二、利用快排原理：</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2019/03/30/2019.3/JDK源码解析-String（上）/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">JDK源码解析-String（上）</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2019 wanzh<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "http://vicwen.com",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/JAVA并发/" style="font-size: 10px;">JAVA并发</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/jDK源码学习系列/" style="font-size: 15px;">jDK源码学习系列</a> <a href="/tags/java实践/" style="font-size: 20px;">java实践</a> <a href="/tags/redis/" style="font-size: 15px;">redis</a> <a href="/tags/浅析算法/" style="font-size: 10px;">浅析算法</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a href="/">
+                    <i class="fa fa-home"></i><span>主页</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/about">
+                    <i class="fa fa-user"></i><span>about me</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/JAVA并发/" style="font-size: 10px;">JAVA并发</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/jDK源码学习系列/" style="font-size: 15px;">jDK源码学习系列</a> <a href="/tags/java实践/" style="font-size: 20px;">java实践</a> <a href="/tags/redis/" style="font-size: 15px;">redis</a> <a href="/tags/浅析算法/" style="font-size: 10px;">浅析算法</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
