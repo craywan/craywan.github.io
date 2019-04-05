@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>ConcurrentHashMap源码解析（一） | ����&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="阿文's Blog">
+  
+  <meta name="description" content="ConcurrentHashMap源码解析一、引言：ConcurrentHashMap是一个用于在多线程环境下使用的并发集合，其出现解决了HashMap线程不安全以及HashTable和synchronized(HashMap)锁粒度太大、并发性不高的问题。  二、属性和构造方法解析：   三、内部类解析：ConCurrentHashMap中的内部类：  Node：Node内部类是作为存储key-">
+<meta name="keywords" content="jDK源码学习系列">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ConcurrentHashMap源码解析（一）">
+<meta property="og:url" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/index.html">
+<meta property="og:site_name" content="����&#39;s Blog">
+<meta property="og:description" content="ConcurrentHashMap源码解析一、引言：ConcurrentHashMap是一个用于在多线程环境下使用的并发集合，其出现解决了HashMap线程不安全以及HashTable和synchronized(HashMap)锁粒度太大、并发性不高的问题。  二、属性和构造方法解析：   三、内部类解析：ConCurrentHashMap中的内部类：  Node：Node内部类是作为存储key-">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map1.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map2.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map3.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map4.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map5.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map6.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map7.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map8.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map9.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map10.png">
+<meta property="og:image" content="file:///D:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/f052e98261a54593a7b84f824f7e157d/clipboard.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map12.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map13.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map14.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map15.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map16.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map17.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map18.png">
+<meta property="og:updated_time" content="2019-04-05T08:44:12.029Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ConcurrentHashMap源码解析（一）">
+<meta name="twitter:description" content="ConcurrentHashMap源码解析一、引言：ConcurrentHashMap是一个用于在多线程环境下使用的并发集合，其出现解决了HashMap线程不安全以及HashTable和synchronized(HashMap)锁粒度太大、并发性不高的问题。  二、属性和构造方法解析：   三、内部类解析：ConCurrentHashMap中的内部类：  Node：Node内部类是作为存储key-">
+<meta name="twitter:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map1.png">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">阿文&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a href="/">
+                        <i class="fa fa-home"></i>
+                        <span>主页</span>
+                    </a>
+                    
+                    <a href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>about me</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        阿文&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        欢迎来到阿文&#39;s blog
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="awen" target="_blank" href="//vicawen.com">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/craywan/">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//github.com/craywan/">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="CSDN" target="_blank" href="//github.com/craywan/">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-2019.4/ConcurrentHashMap源码解析（一）" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      ConcurrentHashMap源码解析（一）
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2019-04-05
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h3 id="ConcurrentHashMap源码解析"><a href="#ConcurrentHashMap源码解析" class="headerlink" title="ConcurrentHashMap源码解析"></a>ConcurrentHashMap源码解析</h3><h4 id="一、引言："><a href="#一、引言：" class="headerlink" title="一、引言："></a>一、引言：</h4><p>ConcurrentHashMap是一个用于在多线程环境下使用的并发集合，其出现解决了HashMap线程不安全以及HashTable和synchronized(HashMap)锁粒度太大、并发性不高的问题。</p>
+<hr>
+<h4 id="二、属性和构造方法解析："><a href="#二、属性和构造方法解析：" class="headerlink" title="二、属性和构造方法解析："></a>二、属性和构造方法解析：</h4><p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map1.png" alt="img"></p>
+<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map2.png" alt="img"></p>
+<hr>
+<h4 id="三、内部类解析："><a href="#三、内部类解析：" class="headerlink" title="三、内部类解析："></a>三、内部类解析：</h4><p>ConCurrentHashMap中的内部类：</p>
+<ul>
+<li>Node：Node内部类是作为存储key-value原子的类，ConcurrentHashMap会将key-value数据封装成Node结构进行存储。</li>
+</ul>
+<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map3.png" alt="img"></p>
+<p>ps：Node中提供的setValue方法已经进行了封装处理，不允许通过setValue方法赋值。</p>
+<ul>
+<li>TreeNode：TreeNode内部类是用于当ConCurrentHashMap由链表转换为红黑树进行节点管理的时候，会将Node封装成TreeNode，并讲给TreeBin对象统一管理，TreeNode类似红黑树节点。</li>
+</ul>
+<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map4.png" alt="img"></p>
+<ul>
+<li>TreeBin：</li>
+</ul>
+<p>TreeBin是用于构造红黑树和提供操作红黑树的各种方法，TrreNode结点都受到TreeBin的管理。</p>
+<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map5.png" alt="img"></p>
+<p>ps：由于ConcurrentHashMap中红黑树的构造比较复杂，阿文在这里就不多逼逼了，后面会专门出文章来探究。</p>
+<ul>
+<li>ForwardingNode:</li>
+</ul>
+<p>ForwordingNode属于一个辅助内部类，总结其作用就是在扩容是提供标记和占位的作用，若数组table中的节点为null或者已经被扩容处理过，则其将会被置为ForwardingNode节点，用于防止其他线程在对节点进行扩容处理。</p>
+<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map6.png" alt="img"></p>
+<hr>
+<h4 id="四、操作方法解析："><a href="#四、操作方法解析：" class="headerlink" title="四、操作方法解析："></a>四、操作方法解析：</h4><p>（一）put方法：</p>
+<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map7.png" alt="img"></p>
+<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map8.png" alt="img"></p>
+<p>执行步骤分析：</p>
+<p>1、判断key和value是否为空，若为空则抛出异常。</p>
+<p>2、利用spread函数计算hash值。</p>
+<p>3、遍历元素数组table，如果数组为空，调用inittable函数初始化数组。</p>
+<p>4、若不可空、则利用hash值通过tabAt函数确定出数组下标。若结点为空，直接新建节点插入。</p>
+<p>5、若结点hash值为-1，表明数组正在扩容，调用helpTransfer函数辅助扩容。</p>
+<p>6、若下标处有节点，则先对该结点加锁，</p>
+<p>7、若下标处为链表，则遍历链表元素查看是否有相同的key，若有，则覆盖value。并退出。</p>
+<p>8、没有相同的key值，则将结点插入链表尾部。</p>
+<p>9、若下标处是红黑树对象，则采用红黑树的方法插入元素。</p>
+<p>10、判断链表长度是否到达转换的临界值。</p>
+<p>11、addCount函数统计元素个数以及判断扩容操作。</p>
+<p>（二）get方法：</p>
+<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map9.png" alt="img"></p>
+<p>get方法首先获取key的hash值，根据hash值定位桶、遍历桶元素通过equals方法查找出元素。</p>
+<p>get方法中没有加锁操作，主要原因是因为get操作所需要的所有变量都被volatile修饰，都具有即时可见性。</p>
+<p>（三）size方法：</p>
+<p>ConcurrentHashMap中的size（）返回的是一个不精确的统计值，因为在通过过程中有其他线程进行操作，所以导致了不精确的情况。JDK1.7和1.8中size的实现有些许的变化。</p>
+<p>JDK1.7下size有两种实现方案：</p>
+<ul>
+<li>方案一：首先会在不加锁的情况下尝试多次计算获取size的大小。若最后两次计算返回的值相同，则就认定为没有元素加入，返回结果。</li>
+<li>方案二：若方案一不可行，则对size进行加锁统计，并返回结果值。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">public int size() &#123;</span><br><span class="line">  final Segment&lt;K,V&gt;[] segments = this.segments;</span><br><span class="line">  int size;</span><br><span class="line">  boolean overflow; // true if size overflows 32 bits</span><br><span class="line">  long sum;         // sum of modCounts</span><br><span class="line">  long last = 0L;   // previous sum</span><br><span class="line">  int retries = -1; // first iteration isn&apos;t retry</span><br><span class="line">  try &#123;</span><br><span class="line">    for (;;) &#123;</span><br><span class="line">      if (retries++ == RETRIES_BEFORE_LOCK) &#123;</span><br><span class="line">        for (int j = 0; j &lt; segments.length; ++j)</span><br><span class="line">          ensureSegment(j).lock(); // force creation</span><br><span class="line">      &#125;</span><br><span class="line">      sum = 0L;</span><br><span class="line">      size = 0;</span><br><span class="line">      overflow = false;</span><br><span class="line">      for (int j = 0; j &lt; segments.length; ++j) &#123;</span><br><span class="line">        Segment&lt;K,V&gt; seg = segmentAt(segments, j);</span><br><span class="line">        if (seg != null) &#123;</span><br><span class="line">          sum += seg.modCount;</span><br><span class="line">          int c = seg.count;</span><br><span class="line">          if (c &lt; 0 || (size += c) &lt; 0)</span><br><span class="line">            overflow = true;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      if (sum == last)</span><br><span class="line">        break;</span><br><span class="line">      last = sum;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; finally &#123;</span><br><span class="line">    if (retries &gt; RETRIES_BEFORE_LOCK) &#123;</span><br><span class="line">      for (int j = 0; j &lt; segments.length; ++j)</span><br><span class="line">        segmentAt(segments, j).unlock();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  return overflow ? Integer.MAX_VALUE : size;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>JDK1.8中的size方法只有一种不加锁的方案：</p>
+<p>size方法定义如下：</p>
+<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map10.png" alt="img"></p>
+<p>CooncurrentHashMap提供了baseCount和counterCells两个辅助变量来实现集合的计数统计。</p>
+<p><img src="file:///D:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/f052e98261a54593a7b84f824f7e157d/clipboard.png" alt="img"></p>
+<p>在sumCount方法中，baseCount通过遍历累加counterCells中的数值来统计结点数量，而对于put操作，毫无疑问会影响size统计值的精确度，当put方法中调用了addCount方法，用于更新baseCount和检测是否需要进行扩容，使得将put操作的影响降到最低。</p>
+<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map12.png" alt="img"></p>
+<p>ps：在JDK1.8中推荐用mappingCount替代size方法进行大小统计。</p>
+<hr>
+<h4 id="五、扩容操作解析："><a href="#五、扩容操作解析：" class="headerlink" title="五、扩容操作解析："></a>五、扩容操作解析：</h4><p>当ConrrentHashMap中元素个数超过达到容量阙值时，则需要进行扩容操作，put函数通过调用addCount方法进行扩容操作。</p>
+<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map13.png" alt="img"></p>
+<p>addCount方法进行扩容主要依赖transfer方法。transfer方法支持多线程不加锁的扩容操作。扩容操作主要包括单线程下创建nextTable以及多线程下降table中的内容复制到nextTable中。</p>
+<p>transfer方法源码分析如下：</p>
+<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map14.png" alt="img"></p>
+<p>1、n便是旧表的长度，stride变量表示每个CPU所需要处理的桶的个数。stride变量有n进过系列运算获得且最小值为16。</p>
+<p>2、因为在addCount时，传入的值为null，即新数组nextTab为空，需要新建个两倍大小的新数组。</p>
+<p>3、用transferIndex变量表示迁移数据的下标，初始时候指向旧数组的尾结点。</p>
+<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map15.png" alt="img"></p>
+<p>4、推进标识符：即当前桶处理完，处理下一个桶的标识。</p>
+<p>5、扩容结束标记符：即扩容操作结束的标识变量。</p>
+<p>6、利用while(advance)循环给进入的线程分配所要负责桶的区间。</p>
+<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map16.png" alt="img"></p>
+<p>7、当扩容完成后，删除nextTable指向的变量，更新新的table变量，且将容量阙值减一，最后重新加测所有的桶。</p>
+<p>8、判断当前位置是否为空。若为空则CAS插入forwardingNode变量，插入成功则继续推进，不成功，数据完成迁移操作后将当前位置的hash值更新为一。</p>
+<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map17.png" alt="img"></p>
+<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map18.png" alt="img"></p>
+<p>部分代码跟hashmap中的类似，也是使用synchronized来锁定头结点，然后根据链表和红黑树分开进行判断数据迁移，如果是链表，ConcurrentHashmap比hashmap多了一个步骤，使用runBit来记录头结点hash值，然后遍历链表一个个跟runBit进行比较，runBit只有两种可能，一种是为0，另一种是为1，也就是说，如果为0，则低位上可以有很多重用的节点，如果为1则表示高位上有很多重用的节点，用lastRun来记录某个节点后runBit不变，也就是lastRun节点后的节点都是重用的，然后遍历lastRun之前的节点，这个地方也不同，hashmap是从头通过node的next属性进行从头往后添加节点，而ConcurrentHashmap是从尾开始往前添加节点，直到添加到首节点，然后通过setTabAt()方法添加到新表的桶中，最后在旧表放入一个fwd占位符。红黑树跟链表也差不多，分出两个红黑树，一个在高位一个在低位，分出来的红黑树再进行长度判断，长度小于等于6的会通过方法untreeify()转换成链表结构存储。</p>
+<hr>
+<h4 id="六、ConcurrentHashMap在JDK-1-7和1-8中的区别："><a href="#六、ConcurrentHashMap在JDK-1-7和1-8中的区别：" class="headerlink" title="六、ConcurrentHashMap在JDK 1.7和1,8中的区别："></a>六、ConcurrentHashMap在JDK 1.7和1,8中的区别：</h4><ul>
+<li><p>1.7采用的是HashEntry+ReentrantLock+segement实现的线程安全，而1.8采用的是Node+synchronized+cas实现的线程安全。</p>
+</li>
+<li><p>对于put操作而言，1.7中首先是通过hash值找到segement数组中的segement对象，若segement为空则利用cas创建对象，然后通过segement对象的put方法加锁插入数据。而1.8中放弃了segement的概念，根据key得到hash值，并在找到相应的数组下标，若下标处为空，则直接插入，若为链表，利用synchronized加锁添加数据，若为红黑树，调用红黑树相应的方法。</p>
+</li>
+<li><p>对于size操作，1.7先回在不加锁的情况下统计两次，若两次值相等，则表示统计值可靠，若不相同，则在加锁下统计数值并返回。而1.8下size操作不需要加锁，只利用baseCount，CounterCell等辅助类提供了几个相对准确的统计值。</p>
+<hr>
+<h4 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h4></li>
+</ul>
+<p><a href="https://blog.csdn.net/shadow_zed/article/details/82079579" target="_blank" rel="noopener">https://blog.csdn.net/shadow_zed/article/details/82079579</a></p>
+<p><a href="https://www.jianshu.com/p/aaf769fdbd20" target="_blank" rel="noopener">https://www.jianshu.com/p/aaf769fdbd20</a></p>
+<p><a href="http://www.iocoder.cn/JUC/sike/ConcurrentHashMap/" target="_blank" rel="noopener">http://www.iocoder.cn/JUC/sike/ConcurrentHashMap/</a></p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2019年04月05日 16:44</p>
+        <p>原始链接： <a class="post-url" href="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/" title="ConcurrentHashMap源码解析（一）">http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/</a></p>
+        <footer>
+            <a href="http://vicwen.com">
+                <img src="/images/logo.png" alt="wanzh">
+                wanzh
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/&title=《ConcurrentHashMap源码解析（一）》 — ����'s Blog&pic=http://vicwen.comimages/logo.png" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/&title=《ConcurrentHashMap源码解析（一）》 — ����'s Blog&source=���Լ�" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《ConcurrentHashMap源码解析（一）》 — ����'s Blog&url=http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/&via=http://vicwen.com" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/jDK源码学习系列/" class="color5">jDK源码学习系列</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ConcurrentHashMap源码解析"><span class="post-toc-text">ConcurrentHashMap源码解析</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#一、引言："><span class="post-toc-text">一、引言：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#二、属性和构造方法解析："><span class="post-toc-text">二、属性和构造方法解析：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#三、内部类解析："><span class="post-toc-text">三、内部类解析：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#四、操作方法解析："><span class="post-toc-text">四、操作方法解析：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#五、扩容操作解析："><span class="post-toc-text">五、扩容操作解析：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#六、ConcurrentHashMap在JDK-1-7和1-8中的区别："><span class="post-toc-text">六、ConcurrentHashMap在JDK 1.7和1,8中的区别：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#参考："><span class="post-toc-text">参考：</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2019/04/04/2019.4/TOP-K问题解析/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">TOP K问题解析</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2019 wanzh<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "http://vicwen.com",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/JAVA并发/" style="font-size: 10px;">JAVA并发</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/jDK源码学习系列/" style="font-size: 20px;">jDK源码学习系列</a> <a href="/tags/java实践/" style="font-size: 20px;">java实践</a> <a href="/tags/redis/" style="font-size: 15px;">redis</a> <a href="/tags/浅析算法/" style="font-size: 10px;">浅析算法</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a href="/">
+                    <i class="fa fa-home"></i><span>主页</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/about">
+                    <i class="fa fa-user"></i><span>about me</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/JAVA并发/" style="font-size: 10px;">JAVA并发</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/jDK源码学习系列/" style="font-size: 20px;">jDK源码学习系列</a> <a href="/tags/java实践/" style="font-size: 20px;">java实践</a> <a href="/tags/redis/" style="font-size: 15px;">redis</a> <a href="/tags/浅析算法/" style="font-size: 10px;">浅析算法</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
