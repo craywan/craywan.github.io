@@ -3,27 +3,27 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>JDK源码解析--Object | ����&#39;s Blog</title>
+  <title>网络-socket | ����&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
     <meta name="keywords" content="阿文's Blog">
   
-  <meta name="description" content="JDK源码解析–Object类 概述：&amp;nbsp;&amp;nbsp; Object是java中所有类的父类，java中的所有类都默认继承了Object父类，当然Object中的所有共有方法都将会被每个类继承。&amp;nbsp;&amp;nbsp; Object中实现的方法如下：   核心方法解析：一、equals方法：&amp;nbsp;&amp;nbsp; Object默认实现的equals方法是通过比较两个对象的地址值实现的，但">
-<meta name="keywords" content="jDK源码学习系列">
+  <meta name="description" content="浅析socket通信一、前言：在讲解socket之前，我们先来了解下TCP/IIP协议族的构造。TCP/IP协议层分为四层，高层协议则是建立在低层协议的服务之上。   二、socket的定义： ​    从上图可以看出，socket属于属于应用层与传输层之间的抽象层，它把TCP/IP层中复杂的操作抽象成几个简单的接口供应用层调用已经实现的进行进行通信。 ​    同时socket有两种不同的类型，">
+<meta name="keywords" content="网络">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JDK源码解析--Object">
-<meta property="og:url" content="http://vicwen.com/2019/03/30/JDK源码解析-Object/index.html">
+<meta property="og:title" content="网络-socket">
+<meta property="og:url" content="http://vicwen.com/2019/04/07/2019.4/网络-socket/index.html">
 <meta property="og:site_name" content="����&#39;s Blog">
-<meta property="og:description" content="JDK源码解析–Object类 概述：&amp;nbsp;&amp;nbsp; Object是java中所有类的父类，java中的所有类都默认继承了Object父类，当然Object中的所有共有方法都将会被每个类继承。&amp;nbsp;&amp;nbsp; Object中实现的方法如下：   核心方法解析：一、equals方法：&amp;nbsp;&amp;nbsp; Object默认实现的equals方法是通过比较两个对象的地址值实现的，但">
+<meta property="og:description" content="浅析socket通信一、前言：在讲解socket之前，我们先来了解下TCP/IIP协议族的构造。TCP/IP协议层分为四层，高层协议则是建立在低层协议的服务之上。   二、socket的定义： ​    从上图可以看出，socket属于属于应用层与传输层之间的抽象层，它把TCP/IP层中复杂的操作抽象成几个简单的接口供应用层调用已经实现的进行进行通信。 ​    同时socket有两种不同的类型，">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://vicwen.com/2019/03/30/JDK源码解析-Object/Object1.jpg">
-<meta property="og:image" content="http://vicwen.com/2019/03/30/JDK源码解析-Object/Object2.png">
-<meta property="og:image" content="http://vicwen.com/2019/03/30/JDK源码解析-Object/Object3.png">
-<meta property="og:updated_time" content="2019-03-30T10:15:46.993Z">
+<meta property="og:image" content="http://vicwen.com/2019/04/07/2019.4/网络-socket/socket.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/07/2019.4/网络-socket/socket1.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/07/2019.4/网络-socket/socket2.png">
+<meta property="og:updated_time" content="2019-04-07T05:12:18.156Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JDK源码解析--Object">
-<meta name="twitter:description" content="JDK源码解析–Object类 概述：&amp;nbsp;&amp;nbsp; Object是java中所有类的父类，java中的所有类都默认继承了Object父类，当然Object中的所有共有方法都将会被每个类继承。&amp;nbsp;&amp;nbsp; Object中实现的方法如下：   核心方法解析：一、equals方法：&amp;nbsp;&amp;nbsp; Object默认实现的equals方法是通过比较两个对象的地址值实现的，但">
-<meta name="twitter:image" content="http://vicwen.com/2019/03/30/JDK源码解析-Object/Object1.jpg">
+<meta name="twitter:title" content="网络-socket">
+<meta name="twitter:description" content="浅析socket通信一、前言：在讲解socket之前，我们先来了解下TCP/IIP协议族的构造。TCP/IP协议层分为四层，高层协议则是建立在低层协议的服务之上。   二、socket的定义： ​    从上图可以看出，socket属于属于应用层与传输层之间的抽象层，它把TCP/IP层中复杂的操作抽象成几个简单的接口供应用层调用已经实现的进行进行通信。 ​    同时socket有两种不同的类型，">
+<meta name="twitter:image" content="http://vicwen.com/2019/04/07/2019.4/网络-socket/socket.png">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -114,20 +114,20 @@
     </div>
 </header>
       <div class="outer">
-        <section id="main" class="body-wrap"><article id="post-JDK源码解析-Object" class="article article-type-post" itemscope="" itemprop="blogPost">
+        <section id="main" class="body-wrap"><article id="post-2019.4/网络-socket" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="post-title" itemprop="name">
-      JDK源码解析--Object
+      网络-socket
     </h1>
     <div class="post-title-bar">
       <ul>
           
         <li>
-          <i class="fa fa-calendar"></i>  2019-03-30
+          <i class="fa fa-calendar"></i>  2019-04-07
         </li>
         <li>
           <i class="fa fa-eye"></i>
@@ -143,31 +143,42 @@
     <div class="article-entry post-content" itemprop="articleBody">
       
             
-            <h2 id="JDK源码解析–Object类"><a href="#JDK源码解析–Object类" class="headerlink" title="JDK源码解析–Object类"></a><center>JDK源码解析–Object类</center></h2><hr>
-<h3 id="概述："><a href="#概述：" class="headerlink" title="概述："></a>概述：</h3><p>&nbsp;&nbsp; Object是java中所有类的父类，java中的所有类都默认继承了Object父类，当然Object中的所有共有方法都将会被每个类继承。<br>&nbsp;&nbsp; Object中实现的方法如下：<br><img src="/2019/03/30/JDK源码解析-Object/Object1.jpg" alt="object1">  </p>
-<h3 id="核心方法解析："><a href="#核心方法解析：" class="headerlink" title="核心方法解析："></a>核心方法解析：</h3><h4 id="一、equals方法："><a href="#一、equals方法：" class="headerlink" title="一、equals方法："></a>一、equals方法：</h4><p>&nbsp;&nbsp; Object默认实现的equals方法是通过比较两个对象的地址值实现的，但在实际情况的对象比较中，往往不会去比较对象的地址值，因此大多数情况是需要重写equals方法。<br>&nbsp;&nbsp; ==equals方法的重写必须要遵循如下原则==  </p>
+            <h3 id="浅析socket通信"><a href="#浅析socket通信" class="headerlink" title="浅析socket通信"></a>浅析socket通信</h3><h4 id="一、前言："><a href="#一、前言：" class="headerlink" title="一、前言："></a>一、前言：</h4><p>在讲解socket之前，我们先来了解下TCP/IIP协议族的构造。TCP/IP协议层分为四层，高层协议则是建立在低层协议的服务之上。</p>
+<p><img src="/2019/04/07/2019.4/网络-socket/socket.png" alt="img"></p>
+<hr>
+<h4 id="二、socket的定义："><a href="#二、socket的定义：" class="headerlink" title="二、socket的定义："></a>二、socket的定义：</h4><p><img src="/2019/04/07/2019.4/网络-socket/socket1.png" alt="img"></p>
+<p>​    从上图可以看出，socket属于属于应用层与传输层之间的抽象层，它把TCP/IP层中复杂的操作抽象成几个简单的接口供应用层调用已经实现的进行进行通信。</p>
+<p>​    同时socket有两种不同的类型，一种是基于TCP协议的串流式socket（水流），另一种是基于UDP协议的讯息式socket（雨滴）,但不管哪种socket其实质上都是提供网络进程间的通信服务，而且进程间通信的前提要能唯一的标识每一个进程。</p>
+<h5 id="进程标识：本地而言可通过PID唯一标识进程，但对于网络中的进程PID大概率会冲突，socket则是采用ip地址-协议-端口号唯一标识网络中的一个进程。"><a href="#进程标识：本地而言可通过PID唯一标识进程，但对于网络中的进程PID大概率会冲突，socket则是采用ip地址-协议-端口号唯一标识网络中的一个进程。" class="headerlink" title="进程标识：本地而言可通过PID唯一标识进程，但对于网络中的进程PID大概率会冲突，socket则是采用ip地址+协议+端口号唯一标识网络中的一个进程。"></a>进程标识：本地而言可通过PID唯一标识进程，但对于网络中的进程PID大概率会冲突，socket则是采用ip地址+协议+端口号唯一标识网络中的一个进程。</h5><hr>
+<h4 id="三、socket的通信原理："><a href="#三、socket的通信原理：" class="headerlink" title="三、socket的通信原理："></a>三、socket的通信原理：</h4><p>socket最开始起源于UNIX，完美继承了UNIX的万物皆文件的思想。所以socket实现了一种“打开-读/写-关闭”的网络通信模式，即客户端和服务器端各自维护一个特殊的“文件”，连接建立后，则可以向文件中写入内容以供对方读取，连接关闭时则关闭文件。</p>
+<p><img src="/2019/04/07/2019.4/网络-socket/socket2.png" alt="img"></p>
+<p>如上图，TCP协议下socket的通信流程，我们可以结合TCP的三次握手来理解：</p>
+<p>1、首先服务器端ip地址类型和socket类型创建适合的socket。</p>
+<p>2、socket绑定ip地址和端口号</p>
+<p>3、监听绑定的端口号，等待建立连接。、</p>
+<p>4、客户端创建socket，并根据服务端ip和端口号连接服务器socket。</p>
+<p>5、服务器socket结构到客户端socket的连接请求后，打开并等待接收连接信息。</p>
+<p>6、客户端连接成功后，向服务器socket发送连接状态信息。</p>
+<p>7、服务端accept方法返回，连接建立成功。</p>
+<p>8、消息通信。</p>
+<p>9、关闭连接。</p>
+<hr>
+<p>补充：UNIX下socket编程基本API：</p>
 <ul>
-<li>自反性</li>
-<li>对称性</li>
-<li>传递性</li>
-<li>一致性</li>
-<li>非空性<br>&nbsp;&nbsp; 下面给出常见的重写方法实现：</li>
+<li>intsocket</li>
+<li>intbind</li>
+<li>intlisten</li>
+<li>intconnect</li>
+<li>intaccept</li>
 </ul>
-<p>注意不要给具有继承关系的父子类之间实现equals方法，否则会违法对称性、传递性的规则。  </p>
-<h4 id="二、hashCode方法："><a href="#二、hashCode方法：" class="headerlink" title="二、hashCode方法："></a>二、hashCode方法：</h4><p>hashcode方法会为每个对象生成一个hash值，一般返回的是内存地址值计算出的值；java规定在重写equals后，一定要重写hashCode方法。<br>&nbsp;&nbsp; 重写hashCode遵循的原则：  </p>
-<ul>
-<li>同一对象多次调用hashCode返回的值一定要相同。</li>
-<li>equals相等的两对象，hashCode一定要相同。</li>
-<li>hashCode相同的对象，equals可以不相等。<br> &nbsp;&nbsp; 下面给出常见的hashCode实现：<br> <img src="/2019/03/30/JDK源码解析-Object/Object2.png" alt="object1"> <h4 id="三、clone方法："><a href="#三、clone方法：" class="headerlink" title="三、clone方法："></a>三、clone方法：</h4>&nbsp;&nbsp; clone方法的需要实现cloneable接口，该接口没有定义任何方法，其次还要重写clone方法，并把clone方法由protected改为public，且在重写时需要调==用super.clone来实现具体的克隆操作==。<br>&nbsp;&nbsp; clone方法将创建和返回该对象的一个拷贝。这个“拷贝”的精确含义取决于该对象的类。一般的含义是，对于任何对象x，表达式x.clone() != x 将会是true，并且，表达式x.clone().getClass() == x.getClass()将会是true。并且通常情况下，表达式x.clone().equals(x)将会是true。<br>clone的优点：  </li>
-</ul>
-<p><img src="/2019/03/30/JDK源码解析-Object/Object3.png" alt="object1"> </p>
-<p>使用clone方法的优点：<br>（1）速度快。clone方法最终会调用Object.clone()方法，这是一个native方法，本质是内存块复制，所以在速度上比使用new创建对象要快。<br>（2）灵活。可以在运行时动态的获取对象的类型以及状态，从而创建一个对象。当然，使用clone方法创建对象的缺点同样非常明显：<br>（3）实现深拷贝较为困难，需要整个类继承系列的所有类都很好的实现clone方法。<br>（4）需要处理CloneNotSupportedException异常。Object类中的clone方法被声明为可能会抛出CloneNotSupportedException，因此在子类中，需要对这一异常进行处理。  </p>
-<h4 id="其他方法："><a href="#其他方法：" class="headerlink" title="其他方法："></a>其他方法：</h4><p>Object下还包含其他的方法：<br>-toString：输出对象信息，一般必须要重写，可以利用IDEA的快捷方式生成。<br>-registerNatives：是本地方法，不能重写，主要用于服务JNI。<br>-getClass：本地方法，返回运行时的class对象。<br>-wait、notify、notifyAll：本地方法，用于多线程通信的场景。<br>-finalize：主要用于销毁对象资源，一般本JVM调用释放即将被回收对象的资源。但往往不建议使用，因为jvm不知道何时执行finalize方法，且不同jvm上的回收算法都不一致，所以执行finalize方法可能是对象的销毁操作变得更慢。<br><a href="https:// https://www.jianshu.com/p/4791207253a0" target="_blank" rel="noopener">参考</a></p>
+<p>参考：</p>
+<p><a href="https://www.jianshu.com/p/0f3953004f4b" target="_blank" rel="noopener">https://www.jianshu.com/p/0f3953004f4b</a></p>
+<p><a href="https://www.cnblogs.com/wangcq/p/3520400.html" target="_blank" rel="noopener">https://www.cnblogs.com/wangcq/p/3520400.html</a></p>
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年03月30日 18:15</p>
-        <p>原始链接： <a class="post-url" href="/2019/03/30/JDK源码解析-Object/" title="JDK源码解析--Object">http://vicwen.com/2019/03/30/JDK源码解析-Object/</a></p>
+        <p>最后更新： 2019年04月07日 13:12</p>
+        <p>原始链接： <a class="post-url" href="/2019/04/07/2019.4/网络-socket/" title="网络-socket">http://vicwen.com/2019/04/07/2019.4/网络-socket/</a></p>
         <footer>
             <a href="http://vicwen.com">
                 <img src="/images/logo.png" alt="wanzh">
@@ -224,7 +235,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://vicwen.com/2019/03/30/JDK源码解析-Object/&title=《JDK源码解析--Object》 — ����'s Blog&pic=./JDK源码解析-Object/Object1.jpg" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://vicwen.com/2019/04/07/2019.4/网络-socket/&title=《网络-socket》 — ����'s Blog&pic=http://vicwen.comimages/logo.png" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -234,22 +245,22 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://vicwen.com/2019/03/30/JDK源码解析-Object/&title=《JDK源码解析--Object》 — ����'s Blog&source=���Լ�" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://vicwen.com/2019/04/07/2019.4/网络-socket/&title=《网络-socket》 — ����'s Blog&source=���Լ�" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
           <li>
-            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://vicwen.com/2019/03/30/JDK源码解析-Object/" data-title="Facebook">
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://vicwen.com/2019/04/07/2019.4/网络-socket/" data-title="Facebook">
               <i class="fa fa-facebook"></i>
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JDK源码解析--Object》 — ����'s Blog&url=http://vicwen.com/2019/03/30/JDK源码解析-Object/&via=http://vicwen.com" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《网络-socket》 — ����'s Blog&url=http://vicwen.com/2019/04/07/2019.4/网络-socket/&via=http://vicwen.com" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
           <li>
-            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://vicwen.com/2019/03/30/JDK源码解析-Object/" data-title="Google+">
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://vicwen.com/2019/04/07/2019.4/网络-socket/" data-title="Google+">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -259,7 +270,7 @@
 <div class="post-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;" id="wxShare-close">×</a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://vicwen.com/2019/03/30/JDK源码解析-Object/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://vicwen.com/2019/04/07/2019.4/网络-socket/" alt="微信分享二维码">
 </div>
 
 <div class="mask"></div>
@@ -271,7 +282,7 @@
   <li class="article-footer-tags">
     <i class="fa fa-tags"></i>
       
-    <a href="/tags/jDK源码学习系列/" class="color5">jDK源码学习系列</a>
+    <a href="/tags/网络/" class="color3">网络</a>
       
   </li>
 
@@ -284,26 +295,16 @@
 
     <aside class="post-toc-pos post-toc-top" id="post-toc">
         <nav class="post-toc-wrap">
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#JDK源码解析–Object类"><span class="post-toc-text">JDK源码解析–Object类</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#概述："><span class="post-toc-text">概述：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#核心方法解析："><span class="post-toc-text">核心方法解析：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#一、equals方法："><span class="post-toc-text">一、equals方法：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#二、hashCode方法："><span class="post-toc-text">二、hashCode方法：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#三、clone方法："><span class="post-toc-text">三、clone方法：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#其他方法："><span class="post-toc-text">其他方法：</span></a></li></ol></li></ol></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#浅析socket通信"><span class="post-toc-text">浅析socket通信</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#一、前言："><span class="post-toc-text">一、前言：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#二、socket的定义："><span class="post-toc-text">二、socket的定义：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#进程标识：本地而言可通过PID唯一标识进程，但对于网络中的进程PID大概率会冲突，socket则是采用ip地址-协议-端口号唯一标识网络中的一个进程。"><span class="post-toc-text">进程标识：本地而言可通过PID唯一标识进程，但对于网络中的进程PID大概率会冲突，socket则是采用ip地址+协议+端口号唯一标识网络中的一个进程。</span></a></li></ol></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#三、socket的通信原理："><span class="post-toc-text">三、socket的通信原理：</span></a></li></ol></li></ol>
         </nav>
     </aside>
     
 
 <nav id="article-nav">
   
-    <a href="/2019/03/30/2019.3/JDK源码解析-String（上）/" id="article-nav-newer" class="article-nav-link-wrap">
-
-      <span class="article-nav-title">
-        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
-        
-          JDK源码解析-String（上）
-        
-      </span>
-    </a>
   
-  
-    <a href="/2019/03/29/redis知识点总结（一）/" id="article-nav-older" class="article-nav-link-wrap">
-      <span class="article-nav-title">redis知识点总结（一）</span>
+    <a href="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">ConcurrentHashMap源码解析（一）</span>
       <i class="fa fa-hand-o-right" aria-hidden="true"></i>
     </a>
   
