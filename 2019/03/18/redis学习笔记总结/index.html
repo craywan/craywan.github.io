@@ -16,22 +16,22 @@
 <meta property="og:site_name" content="����&#39;s Blog">
 <meta property="og:description" content="redis学习总结一、redis的两种持久化方式RDB持久化是指定时间间隔将数据集写入磁盘中，通过fork出的子进程将数据集写入临时文件中，写入成功后，替换源文件并用二进制进行压缩。  AOF是以日志的方式记录redis的写和删除操作，从而实现数据集的持久化。  RDB： 1、优点： 灾难恢复友好：只产生一个文件，便于文件的备份和恢复 性能最优化：fork子进程来完成数据持久化，避免了服务进程的阻">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/8986fad474ee46e1998daf1cfa180251/clipboard.png">
-<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/ac334a39cab54896bda8cacb4e899832/clipboard.png">
-<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/bef0adea0d3f40c8957714688477a157/clipboard.png">
-<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/e46de261df564799a3ba905fc3786b43/clipboard.png">
-<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/293c0ff84add4e048a92b217b7a551d0/clipboard.png">
-<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/115e73cbad43450b8d97e86002ed098a/clipboard.png">
-<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/a699fadc685d48ceaa1a77c8ed72a5aa/clipboard.png">
-<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/936ecaa26ee94de0aa100c342a8c69dd/clipboard.png">
-<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/9ddc332abc3d4fcfa10dbd5b1c989849/clipboard.png">
-<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/40a03e6b10154147aa6b0059d4cfde00/clipboard.png">
-<meta property="og:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/c9bbf2af351e4ec482cd4438698b3494/clipboard.png">
+<meta property="og:image" content="d:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/8986fad474ee46e1998daf1cfa180251/clipboard.png">
+<meta property="og:image" content="d:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/ac334a39cab54896bda8cacb4e899832/clipboard.png">
+<meta property="og:image" content="d:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/bef0adea0d3f40c8957714688477a157/clipboard.png">
+<meta property="og:image" content="d:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/e46de261df564799a3ba905fc3786b43/clipboard.png">
+<meta property="og:image" content="d:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/293c0ff84add4e048a92b217b7a551d0/clipboard.png">
+<meta property="og:image" content="d:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/115e73cbad43450b8d97e86002ed098a/clipboard.png">
+<meta property="og:image" content="d:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/a699fadc685d48ceaa1a77c8ed72a5aa/clipboard.png">
+<meta property="og:image" content="d:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/936ecaa26ee94de0aa100c342a8c69dd/clipboard.png">
+<meta property="og:image" content="d:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/9ddc332abc3d4fcfa10dbd5b1c989849/clipboard.png">
+<meta property="og:image" content="d:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/40a03e6b10154147aa6b0059d4cfde00/clipboard.png">
+<meta property="og:image" content="d:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/c9bbf2af351e4ec482cd4438698b3494/clipboard.png">
 <meta property="og:updated_time" content="2019-03-18T08:58:11.334Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redis学习笔记总结">
 <meta name="twitter:description" content="redis学习总结一、redis的两种持久化方式RDB持久化是指定时间间隔将数据集写入磁盘中，通过fork出的子进程将数据集写入临时文件中，写入成功后，替换源文件并用二进制进行压缩。  AOF是以日志的方式记录redis的写和删除操作，从而实现数据集的持久化。  RDB： 1、优点： 灾难恢复友好：只产生一个文件，便于文件的备份和恢复 性能最优化：fork子进程来完成数据持久化，避免了服务进程的阻">
-<meta name="twitter:image" content="http://vicwen.com/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/8986fad474ee46e1998daf1cfa180251/clipboard.png">
+<meta name="twitter:image" content="d:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/8986fad474ee46e1998daf1cfa180251/clipboard.png">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -152,9 +152,9 @@
       
             
             <h3 id="redis学习总结"><a href="#redis学习总结" class="headerlink" title="redis学习总结"></a>redis学习总结</h3><h4 id="一、redis的两种持久化方式"><a href="#一、redis的两种持久化方式" class="headerlink" title="一、redis的两种持久化方式"></a>一、redis的两种持久化方式</h4><p>RDB持久化是指定时间间隔将数据集写入磁盘中，通过fork出的子进程将数据集写入临时文件中，写入成功后，替换源文件并用二进制进行压缩。</p>
-<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/8986fad474ee46e1998daf1cfa180251/clipboard.png" alt="img"></p>
+<p><img src="D:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/8986fad474ee46e1998daf1cfa180251/clipboard.png" alt="img"></p>
 <p>AOF是以日志的方式记录redis的写和删除操作，从而实现数据集的持久化。</p>
-<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/ac334a39cab54896bda8cacb4e899832/clipboard.png" alt="img"></p>
+<p><img src="D:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/ac334a39cab54896bda8cacb4e899832/clipboard.png" alt="img"></p>
 <p>RDB：</p>
 <p>1、优点：</p>
 <p>灾难恢复友好：只产生一个文件，便于文件的备份和恢复</p>
@@ -200,13 +200,13 @@
 <p>五、redis数据结构原理讲解：</p>
 <p>（一）Redis是以键值对的形式来存放元素的，在创建键值对时，Redis会同时创建键和值两个对象，且Redis中的对象都是由redisObject结构来表示的：</p>
 <p>1、redisObject分析：</p>
-<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/bef0adea0d3f40c8957714688477a157/clipboard.png" alt="img"></p>
+<p><img src="D:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/bef0adea0d3f40c8957714688477a157/clipboard.png" alt="img"></p>
 <p>分析上述字段：</p>
 <p>type：表示对象对应的数据类型的编码。</p>
 <p>encoding：决定了对象底层数据结构的类型</p>
 <p>*prt；指向对象底层数据结构的地址指针</p>
 <p>2、Redis对应的编码如下：</p>
-<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/e46de261df564799a3ba905fc3786b43/clipboard.png" alt="img"></p>
+<p><img src="D:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/e46de261df564799a3ba905fc3786b43/clipboard.png" alt="img"></p>
 <p>（二）数据类型的底层实现：</p>
 <p>1、字符串类型：</p>
 <p>字符串底层编码可以为int、raw、embstr</p>
@@ -215,30 +215,30 @@
 <li>raw：保存长度大于44的字符串</li>
 <li>embstr：保存长度小于44的字符串，且embstr编码针对短字符串的保存进行了优化。</li>
 </ul>
-<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/293c0ff84add4e048a92b217b7a551d0/clipboard.png" alt="img"></p>
+<p><img src="D:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/293c0ff84add4e048a92b217b7a551d0/clipboard.png" alt="img"></p>
 <p>从上图可得出：embstr编码在创建是会少分配一次空间，删除是少释放一次空间，且对象和所有数据连在一起，方便寻址。</p>
 <p>2、列表类型：</p>
 <p>列表的底层编码有ziplist、linkedlist（压缩列表和双向列表）</p>
-<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/115e73cbad43450b8d97e86002ed098a/clipboard.png" alt="img"></p>
+<p><img src="D:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/115e73cbad43450b8d97e86002ed098a/clipboard.png" alt="img"></p>
 <p>当列表元素个数小于512且元素长度小于64字节时，使用ziplist编码。</p>
 <p>3、hash类型：</p>
 <p>hash类型的底层编码可以是ziplist（压缩列表）、hashtable（字典）</p>
-<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/a699fadc685d48ceaa1a77c8ed72a5aa/clipboard.png" alt="img"></p>
+<p><img src="D:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/a699fadc685d48ceaa1a77c8ed72a5aa/clipboard.png" alt="img"></p>
 <p>同样，当列表元素个数小于512且元素长度小于64字节时，使用ziplist编码。</p>
 <p>4、集合set类型：</p>
 <p>set类型的编码可以有intset（整数集合）、hashtable（字典）</p>
-<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/936ecaa26ee94de0aa100c342a8c69dd/clipboard.png" alt="img"></p>
+<p><img src="D:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/936ecaa26ee94de0aa100c342a8c69dd/clipboard.png" alt="img"></p>
 <p>当集合元素数量小于512且集合元素都为整数，就使用intset编码。</p>
 <p>5、有序集合：</p>
 <p>有序集合的编码可以是ziplist、skiplist</p>
-<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/9ddc332abc3d4fcfa10dbd5b1c989849/clipboard.png" alt="img"></p>
+<p><img src="D:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/9ddc332abc3d4fcfa10dbd5b1c989849/clipboard.png" alt="img"></p>
 <p>这里着重分析下跳表，skiplist编码底层结构是由zset实现的，zet结构同时包含了一个字典和一个跳表，而且这两种结构会通过指针来共享相同元素和分值，不会产生重复的元素，自所以要同时使用这两种结构，是因为他们之间存在互补关系，字典查询的时间复杂度为O(1)，但因为无需，所需每次进行范围操作都要排序，因此结合跳表可以更好的执行范围操作。</p>
 <p>ps：分析为何跳表的时间复杂度为O(logn)：</p>
 <p>跳表实质上是具有跳跃功能的双向链表，它和普通双向链表的区别在于跳表的后继指针是一个数组，其存放的不仅经是后继元素的位置，也存放了后继多个元素的位置，因此在查找元素的时候，不需要挨个遍历，可以直接跳到后面某个节点位置。</p>
-<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/40a03e6b10154147aa6b0059d4cfde00/clipboard.png" alt="img"></p>
+<p><img src="D:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/40a03e6b10154147aa6b0059d4cfde00/clipboard.png" alt="img"></p>
 <p>（三）浅析redis中的字典及rehash原理：</p>
 <p>redis中的dict是通过渐进式哈希机制来实现的扩容操作，</p>
-<p><img src="/2019/03/18/redis学习笔记总结/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/c9bbf2af351e4ec482cd4438698b3494/clipboard.png" alt="img"></p>
+<p><img src="D:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/c9bbf2af351e4ec482cd4438698b3494/clipboard.png" alt="img"></p>
 <p>接下来分析一下完成渐进式哈希的几个关键的成员变量：</p>
 <ul>
 <li>dictht::table：hash数组，使用链地址法来解决hash冲突。</li>

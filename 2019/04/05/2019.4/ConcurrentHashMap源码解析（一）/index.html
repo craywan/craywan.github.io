@@ -16,29 +16,29 @@
 <meta property="og:site_name" content="����&#39;s Blog">
 <meta property="og:description" content="ConcurrentHashMap源码解析一、引言：ConcurrentHashMap是一个用于在多线程环境下使用的并发集合，其出现解决了HashMap线程不安全以及HashTable和synchronized(HashMap)锁粒度太大、并发性不高的问题。  二、属性和构造方法解析：   三、内部类解析：ConCurrentHashMap中的内部类：  Node：Node内部类是作为存储key-">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map1.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map2.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map3.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map4.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map5.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map6.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map7.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map8.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map9.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map10.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map1.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map2.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map3.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map4.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map5.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map6.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map7.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map8.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map9.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map10.png">
 <meta property="og:image" content="file:///D:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/f052e98261a54593a7b84f824f7e157d/clipboard.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map12.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map13.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map14.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map15.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map16.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map17.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map18.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map12.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map13.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map14.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map15.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map16.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map17.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map18.png">
 <meta property="og:updated_time" content="2019-04-05T08:44:12.029Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ConcurrentHashMap源码解析（一）">
 <meta name="twitter:description" content="ConcurrentHashMap源码解析一、引言：ConcurrentHashMap是一个用于在多线程环境下使用的并发集合，其出现解决了HashMap线程不安全以及HashTable和synchronized(HashMap)锁粒度太大、并发性不高的问题。  二、属性和构造方法解析：   三、内部类解析：ConCurrentHashMap中的内部类：  Node：Node内部类是作为存储key-">
-<meta name="twitter:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map1.png">
+<meta name="twitter:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map1.png">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -160,34 +160,34 @@
             
             <h3 id="ConcurrentHashMap源码解析"><a href="#ConcurrentHashMap源码解析" class="headerlink" title="ConcurrentHashMap源码解析"></a>ConcurrentHashMap源码解析</h3><h4 id="一、引言："><a href="#一、引言：" class="headerlink" title="一、引言："></a>一、引言：</h4><p>ConcurrentHashMap是一个用于在多线程环境下使用的并发集合，其出现解决了HashMap线程不安全以及HashTable和synchronized(HashMap)锁粒度太大、并发性不高的问题。</p>
 <hr>
-<h4 id="二、属性和构造方法解析："><a href="#二、属性和构造方法解析：" class="headerlink" title="二、属性和构造方法解析："></a>二、属性和构造方法解析：</h4><p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map1.png" alt="img"></p>
-<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map2.png" alt="img"></p>
+<h4 id="二、属性和构造方法解析："><a href="#二、属性和构造方法解析：" class="headerlink" title="二、属性和构造方法解析："></a>二、属性和构造方法解析：</h4><p><img src="ConcurrentHashMap源码解析（一）/map1.png" alt="img"></p>
+<p><img src="ConcurrentHashMap源码解析（一）/map2.png" alt="img"></p>
 <hr>
 <h4 id="三、内部类解析："><a href="#三、内部类解析：" class="headerlink" title="三、内部类解析："></a>三、内部类解析：</h4><p>ConCurrentHashMap中的内部类：</p>
 <ul>
 <li>Node：Node内部类是作为存储key-value原子的类，ConcurrentHashMap会将key-value数据封装成Node结构进行存储。</li>
 </ul>
-<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map3.png" alt="img"></p>
+<p><img src="ConcurrentHashMap源码解析（一）/map3.png" alt="img"></p>
 <p>ps：Node中提供的setValue方法已经进行了封装处理，不允许通过setValue方法赋值。</p>
 <ul>
 <li>TreeNode：TreeNode内部类是用于当ConCurrentHashMap由链表转换为红黑树进行节点管理的时候，会将Node封装成TreeNode，并讲给TreeBin对象统一管理，TreeNode类似红黑树节点。</li>
 </ul>
-<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map4.png" alt="img"></p>
+<p><img src="ConcurrentHashMap源码解析（一）/map4.png" alt="img"></p>
 <ul>
 <li>TreeBin：</li>
 </ul>
 <p>TreeBin是用于构造红黑树和提供操作红黑树的各种方法，TrreNode结点都受到TreeBin的管理。</p>
-<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map5.png" alt="img"></p>
+<p><img src="ConcurrentHashMap源码解析（一）/map5.png" alt="img"></p>
 <p>ps：由于ConcurrentHashMap中红黑树的构造比较复杂，阿文在这里就不多逼逼了，后面会专门出文章来探究。</p>
 <ul>
 <li>ForwardingNode:</li>
 </ul>
 <p>ForwordingNode属于一个辅助内部类，总结其作用就是在扩容是提供标记和占位的作用，若数组table中的节点为null或者已经被扩容处理过，则其将会被置为ForwardingNode节点，用于防止其他线程在对节点进行扩容处理。</p>
-<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map6.png" alt="img"></p>
+<p><img src="ConcurrentHashMap源码解析（一）/map6.png" alt="img"></p>
 <hr>
 <h4 id="四、操作方法解析："><a href="#四、操作方法解析：" class="headerlink" title="四、操作方法解析："></a>四、操作方法解析：</h4><p>（一）put方法：</p>
-<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map7.png" alt="img"></p>
-<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map8.png" alt="img"></p>
+<p><img src="ConcurrentHashMap源码解析（一）/map7.png" alt="img"></p>
+<p><img src="ConcurrentHashMap源码解析（一）/map8.png" alt="img"></p>
 <p>执行步骤分析：</p>
 <p>1、判断key和value是否为空，若为空则抛出异常。</p>
 <p>2、利用spread函数计算hash值。</p>
@@ -201,7 +201,7 @@
 <p>10、判断链表长度是否到达转换的临界值。</p>
 <p>11、addCount函数统计元素个数以及判断扩容操作。</p>
 <p>（二）get方法：</p>
-<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map9.png" alt="img"></p>
+<p><img src="ConcurrentHashMap源码解析（一）/map9.png" alt="img"></p>
 <p>get方法首先获取key的hash值，根据hash值定位桶、遍历桶元素通过equals方法查找出元素。</p>
 <p>get方法中没有加锁操作，主要原因是因为get操作所需要的所有变量都被volatile修饰，都具有即时可见性。</p>
 <p>（三）size方法：</p>
@@ -214,30 +214,30 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">public int size() &#123;</span><br><span class="line">  final Segment&lt;K,V&gt;[] segments = this.segments;</span><br><span class="line">  int size;</span><br><span class="line">  boolean overflow; // true if size overflows 32 bits</span><br><span class="line">  long sum;         // sum of modCounts</span><br><span class="line">  long last = 0L;   // previous sum</span><br><span class="line">  int retries = -1; // first iteration isn&apos;t retry</span><br><span class="line">  try &#123;</span><br><span class="line">    for (;;) &#123;</span><br><span class="line">      if (retries++ == RETRIES_BEFORE_LOCK) &#123;</span><br><span class="line">        for (int j = 0; j &lt; segments.length; ++j)</span><br><span class="line">          ensureSegment(j).lock(); // force creation</span><br><span class="line">      &#125;</span><br><span class="line">      sum = 0L;</span><br><span class="line">      size = 0;</span><br><span class="line">      overflow = false;</span><br><span class="line">      for (int j = 0; j &lt; segments.length; ++j) &#123;</span><br><span class="line">        Segment&lt;K,V&gt; seg = segmentAt(segments, j);</span><br><span class="line">        if (seg != null) &#123;</span><br><span class="line">          sum += seg.modCount;</span><br><span class="line">          int c = seg.count;</span><br><span class="line">          if (c &lt; 0 || (size += c) &lt; 0)</span><br><span class="line">            overflow = true;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      if (sum == last)</span><br><span class="line">        break;</span><br><span class="line">      last = sum;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; finally &#123;</span><br><span class="line">    if (retries &gt; RETRIES_BEFORE_LOCK) &#123;</span><br><span class="line">      for (int j = 0; j &lt; segments.length; ++j)</span><br><span class="line">        segmentAt(segments, j).unlock();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  return overflow ? Integer.MAX_VALUE : size;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>JDK1.8中的size方法只有一种不加锁的方案：</p>
 <p>size方法定义如下：</p>
-<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map10.png" alt="img"></p>
+<p><img src="ConcurrentHashMap源码解析（一）/map10.png" alt="img"></p>
 <p>CooncurrentHashMap提供了baseCount和counterCells两个辅助变量来实现集合的计数统计。</p>
 <p><img src="file:///D:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/f052e98261a54593a7b84f824f7e157d/clipboard.png" alt="img"></p>
 <p>在sumCount方法中，baseCount通过遍历累加counterCells中的数值来统计结点数量，而对于put操作，毫无疑问会影响size统计值的精确度，当put方法中调用了addCount方法，用于更新baseCount和检测是否需要进行扩容，使得将put操作的影响降到最低。</p>
-<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map12.png" alt="img"></p>
+<p><img src="ConcurrentHashMap源码解析（一）/map12.png" alt="img"></p>
 <p>ps：在JDK1.8中推荐用mappingCount替代size方法进行大小统计。</p>
 <hr>
 <h4 id="五、扩容操作解析："><a href="#五、扩容操作解析：" class="headerlink" title="五、扩容操作解析："></a>五、扩容操作解析：</h4><p>当ConrrentHashMap中元素个数超过达到容量阙值时，则需要进行扩容操作，put函数通过调用addCount方法进行扩容操作。</p>
-<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map13.png" alt="img"></p>
+<p><img src="ConcurrentHashMap源码解析（一）/map13.png" alt="img"></p>
 <p>addCount方法进行扩容主要依赖transfer方法。transfer方法支持多线程不加锁的扩容操作。扩容操作主要包括单线程下创建nextTable以及多线程下降table中的内容复制到nextTable中。</p>
 <p>transfer方法源码分析如下：</p>
-<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map14.png" alt="img"></p>
+<p><img src="ConcurrentHashMap源码解析（一）/map14.png" alt="img"></p>
 <p>1、n便是旧表的长度，stride变量表示每个CPU所需要处理的桶的个数。stride变量有n进过系列运算获得且最小值为16。</p>
 <p>2、因为在addCount时，传入的值为null，即新数组nextTab为空，需要新建个两倍大小的新数组。</p>
 <p>3、用transferIndex变量表示迁移数据的下标，初始时候指向旧数组的尾结点。</p>
-<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map15.png" alt="img"></p>
+<p><img src="ConcurrentHashMap源码解析（一）/map15.png" alt="img"></p>
 <p>4、推进标识符：即当前桶处理完，处理下一个桶的标识。</p>
 <p>5、扩容结束标记符：即扩容操作结束的标识变量。</p>
 <p>6、利用while(advance)循环给进入的线程分配所要负责桶的区间。</p>
-<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map16.png" alt="img"></p>
+<p><img src="ConcurrentHashMap源码解析（一）/map16.png" alt="img"></p>
 <p>7、当扩容完成后，删除nextTable指向的变量，更新新的table变量，且将容量阙值减一，最后重新加测所有的桶。</p>
 <p>8、判断当前位置是否为空。若为空则CAS插入forwardingNode变量，插入成功则继续推进，不成功，数据完成迁移操作后将当前位置的hash值更新为一。</p>
-<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map17.png" alt="img"></p>
-<p><img src="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/map18.png" alt="img"></p>
+<p><img src="ConcurrentHashMap源码解析（一）/map17.png" alt="img"></p>
+<p><img src="ConcurrentHashMap源码解析（一）/map18.png" alt="img"></p>
 <p>部分代码跟hashmap中的类似，也是使用synchronized来锁定头结点，然后根据链表和红黑树分开进行判断数据迁移，如果是链表，ConcurrentHashmap比hashmap多了一个步骤，使用runBit来记录头结点hash值，然后遍历链表一个个跟runBit进行比较，runBit只有两种可能，一种是为0，另一种是为1，也就是说，如果为0，则低位上可以有很多重用的节点，如果为1则表示高位上有很多重用的节点，用lastRun来记录某个节点后runBit不变，也就是lastRun节点后的节点都是重用的，然后遍历lastRun之前的节点，这个地方也不同，hashmap是从头通过node的next属性进行从头往后添加节点，而ConcurrentHashmap是从尾开始往前添加节点，直到添加到首节点，然后通过setTabAt()方法添加到新表的桶中，最后在旧表放入一个fwd占位符。红黑树跟链表也差不多，分出两个红黑树，一个在高位一个在低位，分出来的红黑树再进行长度判断，长度小于等于6的会通过方法untreeify()转换成链表结构存储。</p>
 <hr>
 <h4 id="六、ConcurrentHashMap在JDK-1-7和1-8中的区别："><a href="#六、ConcurrentHashMap在JDK-1-7和1-8中的区别：" class="headerlink" title="六、ConcurrentHashMap在JDK 1.7和1,8中的区别："></a>六、ConcurrentHashMap在JDK 1.7和1,8中的区别：</h4><ul>

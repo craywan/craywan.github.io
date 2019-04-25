@@ -16,14 +16,14 @@
 <meta property="og:site_name" content="����&#39;s Blog">
 <meta property="og:description" content="JDK源码解析–Object类 概述：&amp;nbsp;&amp;nbsp; Object是java中所有类的父类，java中的所有类都默认继承了Object父类，当然Object中的所有共有方法都将会被每个类继承。&amp;nbsp;&amp;nbsp; Object中实现的方法如下：   核心方法解析：一、equals方法：&amp;nbsp;&amp;nbsp; Object默认实现的equals方法是通过比较两个对象的地址值实现的，但">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://vicwen.com/2019/03/30/JDK源码解析-Object/Object1.jpg">
-<meta property="og:image" content="http://vicwen.com/2019/03/30/JDK源码解析-Object/Object2.png">
-<meta property="og:image" content="http://vicwen.com/2019/03/30/JDK源码解析-Object/Object3.png">
+<meta property="og:image" content="http://vicwen.com/2019/03/30/JDK源码解析-Object/JDK源码解析-Object/Object1.jpg">
+<meta property="og:image" content="http://vicwen.com/2019/03/30/JDK源码解析-Object/JDK源码解析-Object/Object2.png">
+<meta property="og:image" content="http://vicwen.com/2019/03/30/JDK源码解析-Object/JDK源码解析-Object/Object3.png">
 <meta property="og:updated_time" content="2019-03-30T10:15:46.993Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JDK源码解析--Object">
 <meta name="twitter:description" content="JDK源码解析–Object类 概述：&amp;nbsp;&amp;nbsp; Object是java中所有类的父类，java中的所有类都默认继承了Object父类，当然Object中的所有共有方法都将会被每个类继承。&amp;nbsp;&amp;nbsp; Object中实现的方法如下：   核心方法解析：一、equals方法：&amp;nbsp;&amp;nbsp; Object默认实现的equals方法是通过比较两个对象的地址值实现的，但">
-<meta name="twitter:image" content="http://vicwen.com/2019/03/30/JDK源码解析-Object/Object1.jpg">
+<meta name="twitter:image" content="http://vicwen.com/2019/03/30/JDK源码解析-Object/JDK源码解析-Object/Object1.jpg">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -144,7 +144,7 @@
       
             
             <h2 id="JDK源码解析–Object类"><a href="#JDK源码解析–Object类" class="headerlink" title="JDK源码解析–Object类"></a><center>JDK源码解析–Object类</center></h2><hr>
-<h3 id="概述："><a href="#概述：" class="headerlink" title="概述："></a>概述：</h3><p>&nbsp;&nbsp; Object是java中所有类的父类，java中的所有类都默认继承了Object父类，当然Object中的所有共有方法都将会被每个类继承。<br>&nbsp;&nbsp; Object中实现的方法如下：<br><img src="/2019/03/30/JDK源码解析-Object/Object1.jpg" alt="object1">  </p>
+<h3 id="概述："><a href="#概述：" class="headerlink" title="概述："></a>概述：</h3><p>&nbsp;&nbsp; Object是java中所有类的父类，java中的所有类都默认继承了Object父类，当然Object中的所有共有方法都将会被每个类继承。<br>&nbsp;&nbsp; Object中实现的方法如下：<br><img src="JDK源码解析-Object/Object1.jpg" alt="object1">  </p>
 <h3 id="核心方法解析："><a href="#核心方法解析：" class="headerlink" title="核心方法解析："></a>核心方法解析：</h3><h4 id="一、equals方法："><a href="#一、equals方法：" class="headerlink" title="一、equals方法："></a>一、equals方法：</h4><p>&nbsp;&nbsp; Object默认实现的equals方法是通过比较两个对象的地址值实现的，但在实际情况的对象比较中，往往不会去比较对象的地址值，因此大多数情况是需要重写equals方法。<br>&nbsp;&nbsp; ==equals方法的重写必须要遵循如下原则==  </p>
 <ul>
 <li>自反性</li>
@@ -158,9 +158,9 @@
 <ul>
 <li>同一对象多次调用hashCode返回的值一定要相同。</li>
 <li>equals相等的两对象，hashCode一定要相同。</li>
-<li>hashCode相同的对象，equals可以不相等。<br> &nbsp;&nbsp; 下面给出常见的hashCode实现：<br> <img src="/2019/03/30/JDK源码解析-Object/Object2.png" alt="object1"> <h4 id="三、clone方法："><a href="#三、clone方法：" class="headerlink" title="三、clone方法："></a>三、clone方法：</h4>&nbsp;&nbsp; clone方法的需要实现cloneable接口，该接口没有定义任何方法，其次还要重写clone方法，并把clone方法由protected改为public，且在重写时需要调==用super.clone来实现具体的克隆操作==。<br>&nbsp;&nbsp; clone方法将创建和返回该对象的一个拷贝。这个“拷贝”的精确含义取决于该对象的类。一般的含义是，对于任何对象x，表达式x.clone() != x 将会是true，并且，表达式x.clone().getClass() == x.getClass()将会是true。并且通常情况下，表达式x.clone().equals(x)将会是true。<br>clone的优点：  </li>
+<li>hashCode相同的对象，equals可以不相等。<br> &nbsp;&nbsp; 下面给出常见的hashCode实现：<br> <img src="JDK源码解析-Object/Object2.png" alt="object1"> <h4 id="三、clone方法："><a href="#三、clone方法：" class="headerlink" title="三、clone方法："></a>三、clone方法：</h4>&nbsp;&nbsp; clone方法的需要实现cloneable接口，该接口没有定义任何方法，其次还要重写clone方法，并把clone方法由protected改为public，且在重写时需要调==用super.clone来实现具体的克隆操作==。<br>&nbsp;&nbsp; clone方法将创建和返回该对象的一个拷贝。这个“拷贝”的精确含义取决于该对象的类。一般的含义是，对于任何对象x，表达式x.clone() != x 将会是true，并且，表达式x.clone().getClass() == x.getClass()将会是true。并且通常情况下，表达式x.clone().equals(x)将会是true。<br>clone的优点：  </li>
 </ul>
-<p><img src="/2019/03/30/JDK源码解析-Object/Object3.png" alt="object1"> </p>
+<p><img src="JDK源码解析-Object/Object3.png" alt="object1"> </p>
 <p>使用clone方法的优点：<br>（1）速度快。clone方法最终会调用Object.clone()方法，这是一个native方法，本质是内存块复制，所以在速度上比使用new创建对象要快。<br>（2）灵活。可以在运行时动态的获取对象的类型以及状态，从而创建一个对象。当然，使用clone方法创建对象的缺点同样非常明显：<br>（3）实现深拷贝较为困难，需要整个类继承系列的所有类都很好的实现clone方法。<br>（4）需要处理CloneNotSupportedException异常。Object类中的clone方法被声明为可能会抛出CloneNotSupportedException，因此在子类中，需要对这一异常进行处理。  </p>
 <h4 id="其他方法："><a href="#其他方法：" class="headerlink" title="其他方法："></a>其他方法：</h4><p>Object下还包含其他的方法：<br>-toString：输出对象信息，一般必须要重写，可以利用IDEA的快捷方式生成。<br>-registerNatives：是本地方法，不能重写，主要用于服务JNI。<br>-getClass：本地方法，返回运行时的class对象。<br>-wait、notify、notifyAll：本地方法，用于多线程通信的场景。<br>-finalize：主要用于销毁对象资源，一般本JVM调用释放即将被回收对象的资源。但往往不建议使用，因为jvm不知道何时执行finalize方法，且不同jvm上的回收算法都不一致，所以执行finalize方法可能是对象的销毁操作变得更慢。<br><a href="https:// https://www.jianshu.com/p/4791207253a0" target="_blank" rel="noopener">参考</a></p>
 
