@@ -12,33 +12,33 @@
 <meta name="keywords" content="jDK源码学习系列">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ConcurrentHashMap源码解析（一）">
-<meta property="og:url" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/index.html">
+<meta property="og:url" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/index.html">
 <meta property="og:site_name" content="����&#39;s Blog">
 <meta property="og:description" content="ConcurrentHashMap源码解析一、引言：ConcurrentHashMap是一个用于在多线程环境下使用的并发集合，其出现解决了HashMap线程不安全以及HashTable和synchronized(HashMap)锁粒度太大、并发性不高的问题。  二、属性和构造方法解析：   三、内部类解析：ConCurrentHashMap中的内部类：  Node：Node内部类是作为存储key-">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map1.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map2.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map3.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map4.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map5.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map6.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map7.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map8.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map9.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map10.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/ConcurrentHashMap源码解析（一）/map1.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/ConcurrentHashMap源码解析（一）/map2.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/ConcurrentHashMap源码解析（一）/map3.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/ConcurrentHashMap源码解析（一）/map4.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/ConcurrentHashMap源码解析（一）/map5.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/ConcurrentHashMap源码解析（一）/map6.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/ConcurrentHashMap源码解析（一）/map7.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/ConcurrentHashMap源码解析（一）/map8.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/ConcurrentHashMap源码解析（一）/map9.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/ConcurrentHashMap源码解析（一）/map10.png">
 <meta property="og:image" content="file:///D:/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/%E6%9C%89%E9%81%93%E7%AC%94%E8%AE%B0/qq3F7FB0AD8019D90CA9CA201228831A82/f052e98261a54593a7b84f824f7e157d/clipboard.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map12.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map13.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map14.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map15.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map16.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map17.png">
-<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map18.png">
-<meta property="og:updated_time" content="2019-04-05T08:44:12.029Z">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/ConcurrentHashMap源码解析（一）/map12.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/ConcurrentHashMap源码解析（一）/map13.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/ConcurrentHashMap源码解析（一）/map14.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/ConcurrentHashMap源码解析（一）/map15.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/ConcurrentHashMap源码解析（一）/map16.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/ConcurrentHashMap源码解析（一）/map17.png">
+<meta property="og:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/ConcurrentHashMap源码解析（一）/map18.png">
+<meta property="og:updated_time" content="2019-05-05T03:23:58.283Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ConcurrentHashMap源码解析（一）">
 <meta name="twitter:description" content="ConcurrentHashMap源码解析一、引言：ConcurrentHashMap是一个用于在多线程环境下使用的并发集合，其出现解决了HashMap线程不安全以及HashTable和synchronized(HashMap)锁粒度太大、并发性不高的问题。  二、属性和构造方法解析：   三、内部类解析：ConCurrentHashMap中的内部类：  Node：Node内部类是作为存储key-">
-<meta name="twitter:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/ConcurrentHashMap源码解析（一）/map1.png">
+<meta name="twitter:image" content="http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/ConcurrentHashMap源码解析（一）/map1.png">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -129,7 +129,7 @@
     </div>
 </header>
       <div class="outer">
-        <section id="main" class="body-wrap"><article id="post-2019.4/ConcurrentHashMap源码解析（一）" class="article article-type-post" itemscope="" itemprop="blogPost">
+        <section id="main" class="body-wrap"><article id="post-2019.4/ConcurrentHashMap源码解析" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
@@ -255,8 +255,8 @@
 
             <div class="post-copyright">
     <div class="content">
-        <p>最后更新： 2019年04月05日 16:44</p>
-        <p>原始链接： <a class="post-url" href="/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/" title="ConcurrentHashMap源码解析（一）">http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/</a></p>
+        <p>最后更新： 2019年05月05日 11:23</p>
+        <p>原始链接： <a class="post-url" href="/2019/04/05/2019.4/ConcurrentHashMap源码解析/" title="ConcurrentHashMap源码解析（一）">http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/</a></p>
         <footer>
             <a href="http://vicwen.com">
                 <img src="/images/logo.png" alt="wanzh">
@@ -313,7 +313,7 @@
     <div class="post-share-list" id="share-list">
         <ul class="share-icons">
           <li>
-            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/&title=《ConcurrentHashMap源码解析（一）》 — ����'s Blog&pic=http://vicwen.comimages/logo.png" data-title="微博">
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/&title=《ConcurrentHashMap源码解析（一）》 — ����'s Blog&pic=http://vicwen.comimages/logo.png" data-title="微博">
               <i class="fa fa-weibo"></i>
             </a>
           </li>
@@ -323,22 +323,22 @@
             </a>
           </li>
           <li>
-            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/&title=《ConcurrentHashMap源码解析（一）》 — ����'s Blog&source=���Լ�" data-title="QQ">
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/&title=《ConcurrentHashMap源码解析（一）》 — ����'s Blog&source=���Լ�" data-title="QQ">
               <i class="fa fa-qq"></i>
             </a>
           </li>
           <li>
-            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/" data-title="Facebook">
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/" data-title="Facebook">
               <i class="fa fa-facebook"></i>
             </a>
           </li>
           <li>
-            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《ConcurrentHashMap源码解析（一）》 — ����'s Blog&url=http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/&via=http://vicwen.com" data-title="Twitter">
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《ConcurrentHashMap源码解析（一）》 — ����'s Blog&url=http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/&via=http://vicwen.com" data-title="Twitter">
               <i class="fa fa-twitter"></i>
             </a>
           </li>
           <li>
-            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/" data-title="Google+">
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/" data-title="Google+">
               <i class="fa fa-google-plus"></i>
             </a>
           </li>
@@ -348,7 +348,7 @@
 <div class="post-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;" id="wxShare-close">×</a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析（一）/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://vicwen.com/2019/04/05/2019.4/ConcurrentHashMap源码解析/" alt="微信分享二维码">
 </div>
 
 <div class="mask"></div>
@@ -457,7 +457,7 @@
             
         </div>
         <div id="sidebar-menu-box-tags">
-            <a href="/tags/JAVA并发/" style="font-size: 10px;">JAVA并发</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/jDK源码学习系列/" style="font-size: 20px;">jDK源码学习系列</a> <a href="/tags/java实践/" style="font-size: 20px;">java实践</a> <a href="/tags/redis/" style="font-size: 15px;">redis</a> <a href="/tags/浅析算法/" style="font-size: 10px;">浅析算法</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a>
+            <a href="/tags/JAVA并发/" style="font-size: 10px;">JAVA并发</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/jDK源码学习系列/" style="font-size: 20px;">jDK源码学习系列</a> <a href="/tags/java实践/" style="font-size: 20px;">java实践</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/浅析算法/" style="font-size: 10px;">浅析算法</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a>
         </div>
     </div>
     <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
@@ -490,7 +490,7 @@
     <div class="mobile-header-tag-container">
         <span class="title">Tags</span>
         <div id="mobile-header-container-tags">
-            <a href="/tags/JAVA并发/" style="font-size: 10px;">JAVA并发</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/jDK源码学习系列/" style="font-size: 20px;">jDK源码学习系列</a> <a href="/tags/java实践/" style="font-size: 20px;">java实践</a> <a href="/tags/redis/" style="font-size: 15px;">redis</a> <a href="/tags/浅析算法/" style="font-size: 10px;">浅析算法</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a>
+            <a href="/tags/JAVA并发/" style="font-size: 10px;">JAVA并发</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/jDK源码学习系列/" style="font-size: 20px;">jDK源码学习系列</a> <a href="/tags/java实践/" style="font-size: 20px;">java实践</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/浅析算法/" style="font-size: 10px;">浅析算法</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a>
         </div>
     </div>
 </div>
