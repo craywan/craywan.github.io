@@ -16,12 +16,12 @@
 <meta property="og:site_name" content="����&#39;s Blog">
 <meta property="og:description" content="JDK源码解析-String类 String类是java.lang包下的一个不可变类，也是java开发中经常使用的一个类，接下来，阿文就对String的底层源码实现一探究竟。    一、String类的类和属性定义： 12345678910111213//类的定义public final class String    implements java.io.Serializable, Compa">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://vicwen.com/2019/03/30/2019.3/JDK源码解析-String（上）/JDK源码解析-String（上）/String1.png">
+<meta property="og:image" content="http://vicwen.com/2019/03/30/2019.3/JDK源码解析-String（上）/String1.png">
 <meta property="og:updated_time" content="2019-03-30T10:14:08.974Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JDK源码解析-String（上）">
 <meta name="twitter:description" content="JDK源码解析-String类 String类是java.lang包下的一个不可变类，也是java开发中经常使用的一个类，接下来，阿文就对String的底层源码实现一探究竟。    一、String类的类和属性定义： 12345678910111213//类的定义public final class String    implements java.io.Serializable, Compa">
-<meta name="twitter:image" content="http://vicwen.com/2019/03/30/2019.3/JDK源码解析-String（上）/JDK源码解析-String（上）/String1.png">
+<meta name="twitter:image" content="http://vicwen.com/2019/03/30/2019.3/JDK源码解析-String（上）/String1.png">
   
   
     <link rel="icon" href="/favicon.ico">
@@ -148,7 +148,7 @@
 <p><code></code></p>
 <p>   通过String类的定义可知，其通过serializable接口实现序列化，Comparable实现了String对象的比较，CharSequence接口表明是一个有序集合。通过属地可以看出，其底层也是通过字符数组来实现的字符串的存储。  </p>
 <h4 id="二、构造方法："><a href="#二、构造方法：" class="headerlink" title="二、构造方法："></a>二、构造方法：</h4><p>​    String支持很丰富的构造方法，字符串、字符数组、字节数组、StringBuffer都可以作为构造方法的参数。</p>
-<p>​        <img src="JDK源码解析-String（上）/String1.png" alt="String1"></p>
+<p>​        <img src="/2019/03/30/2019.3/JDK源码解析-String（上）/String1.png" alt="String1"></p>
 <h4 id="三、equals和hashCode方法："><a href="#三、equals和hashCode方法：" class="headerlink" title="三、equals和hashCode方法："></a>三、equals和hashCode方法：</h4><pre><code>   //equals方法会逐个比较字符value数组的值，若存在不同则返回false
    public boolean equals(Object anObject) {
     if (this == anObject) {
