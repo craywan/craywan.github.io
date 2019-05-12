@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>mysql专栏-隔离级别原理剖析 | ����&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="阿文's Blog">
+  
+  <meta name="description" content="一、概述：事务隔离级别是数据库用来处理数据库高并发访问的安全性和效率性锁提供的事务处理机制，数据库是一个高并发的应用，同一时间会有大量的并发访问量，因此，理解隔离级别的底层原理，原则合适的隔离级别对数据库是至关重要的。  二、常见的并发封锁策略： 一次封锁协议：预先对徐亚访问的数据对象进行全部加锁，这种方式很有效的解决了死锁的问题，但对于数据库这种大并发的应用显然是不适用的，因为在事务开始时候，事">
+<meta name="keywords" content="mysql专栏">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql专栏-隔离级别原理剖析">
+<meta property="og:url" content="http://vicwen.com/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/index.html">
+<meta property="og:site_name" content="����&#39;s Blog">
+<meta property="og:description" content="一、概述：事务隔离级别是数据库用来处理数据库高并发访问的安全性和效率性锁提供的事务处理机制，数据库是一个高并发的应用，同一时间会有大量的并发访问量，因此，理解隔离级别的底层原理，原则合适的隔离级别对数据库是至关重要的。  二、常见的并发封锁策略： 一次封锁协议：预先对徐亚访问的数据对象进行全部加锁，这种方式很有效的解决了死锁的问题，但对于数据库这种大并发的应用显然是不适用的，因为在事务开始时候，事">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://vicwen.com/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/innoDB3.png">
+<meta property="og:image" content="http://vicwen.com/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/innoDB4.png">
+<meta property="og:image" content="http://vicwen.com/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/innoDB5.png">
+<meta property="og:image" content="http://vicwen.com/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/innoDB1.png">
+<meta property="og:image" content="http://vicwen.com/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/innoDB2.png">
+<meta property="og:image" content="http://vicwen.com/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/innoDB6.png">
+<meta property="og:updated_time" content="2019-05-12T14:27:14.304Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mysql专栏-隔离级别原理剖析">
+<meta name="twitter:description" content="一、概述：事务隔离级别是数据库用来处理数据库高并发访问的安全性和效率性锁提供的事务处理机制，数据库是一个高并发的应用，同一时间会有大量的并发访问量，因此，理解隔离级别的底层原理，原则合适的隔离级别对数据库是至关重要的。  二、常见的并发封锁策略： 一次封锁协议：预先对徐亚访问的数据对象进行全部加锁，这种方式很有效的解决了死锁的问题，但对于数据库这种大并发的应用显然是不适用的，因为在事务开始时候，事">
+<meta name="twitter:image" content="http://vicwen.com/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/innoDB3.png">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">阿文&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a href="/">
+                        <i class="fa fa-home"></i>
+                        <span>主页</span>
+                    </a>
+                    
+                    <a href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>about me</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        阿文&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        欢迎来到阿文&#39;s blog
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="awen" target="_blank" href="//vicawen.com">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/craywan/">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//github.com/craywan/">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="CSDN" target="_blank" href="//github.com/craywan/">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-编程/mysql/mysql专栏-隔离级别原理剖析" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      mysql专栏-隔离级别原理剖析
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2019-05-12
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h4 id="一、概述："><a href="#一、概述：" class="headerlink" title="一、概述："></a>一、概述：</h4><p>事务隔离级别是数据库用来处理数据库高并发访问的安全性和效率性锁提供的事务处理机制，数据库是一个高并发的应用，同一时间会有大量的并发访问量，因此，理解隔离级别的底层原理，原则合适的隔离级别对数据库是至关重要的。</p>
+<hr>
+<h4 id="二、常见的并发封锁策略："><a href="#二、常见的并发封锁策略：" class="headerlink" title="二、常见的并发封锁策略："></a>二、常见的并发封锁策略：</h4><ol>
+<li><p>一次封锁协议：预先对徐亚访问的数据对象进行全部加锁，这种方式很有效的解决了死锁的问题，但对于数据库这种大并发的应用显然是不适用的，因为在事务开始时候，事务并不知道需要用到哪些数据，即数据是变化的。</p>
+<p>​</p>
+</li>
+<li><p>两段锁协议：在加锁阶段不能释放锁，在释放锁阶段不能加锁，两段锁协议非常适合数据库事务的加锁方式，也是目前事务正在使用的封锁策略。</p>
+</li>
+</ol>
+<p><img src="/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/innoDB3.png" alt="img"></p>
+<p>虽然这种封锁策略无法避免死锁的问题，但能报保证串行化加锁和解锁，对事务的回滚和数据备份都有很大的作用。</p>
+<hr>
+<h4 id="三、innoDB中的锁策略算法："><a href="#三、innoDB中的锁策略算法：" class="headerlink" title="三、innoDB中的锁策略算法："></a>三、innoDB中的锁策略算法：</h4><p>1、记录锁算法：记录锁是锁的索引记录，不是真正的数据记录。</p>
+<p><img src="/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/innoDB4.png" alt="img"></p>
+<p>2、间隙锁（防止幻读）</p>
+<p>间隙锁又叫GAP锁，隔离级别为可重复读，即是在索引的间隙加锁，禁止插入数据。</p>
+<p><img src="/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/innoDB5.png" alt="img"></p>
+<p>3、next-key锁;next-key锁实质也是使用了GAP锁，在进行范围检索时，主要作用是对范围进行行加锁和间隙加锁，数据库就是使用该算法进行多行扫描加锁，不但对记录加行锁，还加间隙锁。<a href="https://blog.csdn.net/xifeijian/article/details/20313977" target="_blank" rel="noopener">https://blog.csdn.net/xifeijian/article/details/20313977</a></p>
+<p>4、插入意向锁：当多个事务同时写入数据到同一间隙时，并不需要等待其他事务完成。当若存在间隙锁，则需要等待间隙锁释放。</p>
+<p>5、mvcc;多版本并发控制技术，innoDB中，在行记录中增加两个隐藏列，分别记录创建版本号和删除版本号，通过版本号和行锁来提高数据库系统的并发性能。但mysql中的mvcc并非真正意义上的mvcc，只是借助mvcc实现了读的非阻塞而已。</p>
+<h6 id="MVCC中读操作分类如下："><a href="#MVCC中读操作分类如下：" class="headerlink" title="MVCC中读操作分类如下："></a>MVCC中读操作分类如下：</h6><ul>
+<li>快照读：读取的历史数据，简单的 select 语句，不加锁，MVCC 实现可重复读，使用的是 MVCC 机制读取 undo 中的已经提交的数据。所以它的读取是非阻塞的。</li>
+<li>当前读：需要加锁的语句，update，insert，delete，select…for update 等等都是当前读。</li>
+</ul>
+<p><a href="https://www.cnblogs.com/paul8339/p/9936005.html" target="_blank" rel="noopener">https://www.cnblogs.com/paul8339/p/9936005.html</a></p>
+<hr>
+<h4 id="四、innoDB隔离级别的实现原理："><a href="#四、innoDB隔离级别的实现原理：" class="headerlink" title="四、innoDB隔离级别的实现原理："></a>四、innoDB隔离级别的实现原理：</h4><p><img src="/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/innoDB1.png" alt="img"></p>
+<ul>
+<li>读未提交：读未提交是几乎不会使用的隔离级别，这种隔离级别对数据库的任何操作都不会加锁。</li>
+<li>读已提交：读已提交对读取操作不会加锁，到对修改、更新和删除操作会加锁，</li>
+</ul>
+<p><img src="/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/innoDB2.png" alt="img"></p>
+<p>从上图可知，事务A对teacher_id=1这一行进行更新操作，因此需先对对应的行加行锁，从而导致后来的事务B中的更新操作报错。</p>
+<h5 id="ps：上述情况中的teacher-id是索引列，能够别唯一的确认，因此加的是行锁，若是对非索引列进行当前读操作，这时候，innoDB存储引擎无法快速的通过索引过滤出对应的行，-因此数据库会对整表加锁。在有MYSQL-server进行过滤。"><a href="#ps：上述情况中的teacher-id是索引列，能够别唯一的确认，因此加的是行锁，若是对非索引列进行当前读操作，这时候，innoDB存储引擎无法快速的通过索引过滤出对应的行，-因此数据库会对整表加锁。在有MYSQL-server进行过滤。" class="headerlink" title="ps：上述情况中的teacher_id是索引列，能够别唯一的确认，因此加的是行锁，若是对非索引列进行当前读操作，这时候，innoDB存储引擎无法快速的通过索引过滤出对应的行，    因此数据库会对整表加锁。在有MYSQL server进行过滤。"></a>ps：上述情况中的teacher_id是索引列，能够别唯一的确认，因此加的是行锁，若是对非索引列进行当前读操作，这时候，innoDB存储引擎无法快速的通过索引过滤出对应的行，    因此数据库会对整表加锁。在有MYSQL server进行过滤。</h5><p>当然，操作《高性能MYSQL》中MYSQL server在进行过滤时候，会释放不满足条件的行锁，这样锁虽然违反了两段锁的思想，但提高了部分的效率。</p>
+<ul>
+<li>可重复读：innoDB默认的隔离级别为可重复读，可重复复分为“读”和“写”两部分，读取不加锁，使用MVCC来实现可重复读，写操作利用next-key锁来保证事务操作安全。</li>
+</ul>
+<p><img src="/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/innoDB6.png" alt="img"></p>
+<p>ps：可重复读中不可重复读和幻读的情况非常相似，但可重复读主要侧重于update和delete操作，幻读主要侧重于insert操作。</p>
+<ul>
+<li><p>可串行化：这个级别很简单，读加共享锁，写加排他锁，读写互斥。使用的悲观锁的理论，实现简单，数据更加安全，但是并发能力非常差。如果你的业务并发的特别少或者没有并发，同时又要求数据及时可靠的话，可以使用这种模式</p>
+<p>​</p>
+</li>
+</ul>
+<p>参考：<a href="https://blog.csdn.net/matt8/article/details/53096405" target="_blank" rel="noopener">https://blog.csdn.net/matt8/article/details/53096405</a></p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2019年05月12日 22:27</p>
+        <p>原始链接： <a class="post-url" href="/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/" title="mysql专栏-隔离级别原理剖析">http://vicwen.com/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/</a></p>
+        <footer>
+            <a href="http://vicwen.com">
+                <img src="/images/logo.png" alt="wanzh">
+                wanzh
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://vicwen.com/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/&title=《mysql专栏-隔离级别原理剖析》 — ����'s Blog&pic=./mysql专栏/pic.png" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://vicwen.com/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/&title=《mysql专栏-隔离级别原理剖析》 — ����'s Blog&source=���Լ�" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://vicwen.com/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《mysql专栏-隔离级别原理剖析》 — ����'s Blog&url=http://vicwen.com/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/&via=http://vicwen.com" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://vicwen.com/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://vicwen.com/2019/05/12/编程/mysql/mysql专栏-隔离级别原理剖析/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/mysql专栏/" class="color3">mysql专栏</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#一、概述："><span class="post-toc-text">一、概述：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#二、常见的并发封锁策略："><span class="post-toc-text">二、常见的并发封锁策略：</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#三、innoDB中的锁策略算法："><span class="post-toc-text">三、innoDB中的锁策略算法：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#MVCC中读操作分类如下："><span class="post-toc-text">MVCC中读操作分类如下：</span></a></li></ol></li></ol><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#四、innoDB隔离级别的实现原理："><span class="post-toc-text">四、innoDB隔离级别的实现原理：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#ps：上述情况中的teacher-id是索引列，能够别唯一的确认，因此加的是行锁，若是对非索引列进行当前读操作，这时候，innoDB存储引擎无法快速的通过索引过滤出对应的行，-因此数据库会对整表加锁。在有MYSQL-server进行过滤。"><span class="post-toc-text">ps：上述情况中的teacher_id是索引列，能够别唯一的确认，因此加的是行锁，若是对非索引列进行当前读操作，这时候，innoDB存储引擎无法快速的通过索引过滤出对应的行，    因此数据库会对整表加锁。在有MYSQL server进行过滤。</span></a></li></ol></li>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/2019/04/07/2019.4/网络-socket/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">网络-socket</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2019 wanzh<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "http://vicwen.com",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/JAVA并发/" style="font-size: 10px;">JAVA并发</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/jDK源码学习系列/" style="font-size: 20px;">jDK源码学习系列</a> <a href="/tags/java实践/" style="font-size: 20px;">java实践</a> <a href="/tags/mysql专栏/" style="font-size: 10px;">mysql专栏</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/浅析算法/" style="font-size: 10px;">浅析算法</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a href="/">
+                    <i class="fa fa-home"></i><span>主页</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/about">
+                    <i class="fa fa-user"></i><span>about me</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/JAVA并发/" style="font-size: 10px;">JAVA并发</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/jDK源码学习系列/" style="font-size: 20px;">jDK源码学习系列</a> <a href="/tags/java实践/" style="font-size: 20px;">java实践</a> <a href="/tags/mysql专栏/" style="font-size: 10px;">mysql专栏</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/浅析算法/" style="font-size: 10px;">浅析算法</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>

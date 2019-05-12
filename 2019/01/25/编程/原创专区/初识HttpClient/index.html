@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>初识HttpClient | ����&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="阿文's Blog">
+  
+  <meta name="description" content="初识HttpClient1、HttpClient是Apache Jakarta Common下的子项目，用来提供高效的、最新的、功能丰富的支持HTTP协议的客户端编程工具包，并且它支持HTTP协议最新的版本和建议。HttpClient已经应用在很多的项目中，比如Apache Jakarta上很著名的另外两个开源项目Cactus和HTMLUnit都使用了HttpClient。 2、使用步骤和基本的方">
+<meta name="keywords" content="java实践">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初识HttpClient">
+<meta property="og:url" content="http://vicwen.com/2019/01/25/编程/原创专区/初识HttpClient/index.html">
+<meta property="og:site_name" content="����&#39;s Blog">
+<meta property="og:description" content="初识HttpClient1、HttpClient是Apache Jakarta Common下的子项目，用来提供高效的、最新的、功能丰富的支持HTTP协议的客户端编程工具包，并且它支持HTTP协议最新的版本和建议。HttpClient已经应用在很多的项目中，比如Apache Jakarta上很著名的另外两个开源项目Cactus和HTMLUnit都使用了HttpClient。 2、使用步骤和基本的方">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-01-25T14:09:53.441Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="初识HttpClient">
+<meta name="twitter:description" content="初识HttpClient1、HttpClient是Apache Jakarta Common下的子项目，用来提供高效的、最新的、功能丰富的支持HTTP协议的客户端编程工具包，并且它支持HTTP协议最新的版本和建议。HttpClient已经应用在很多的项目中，比如Apache Jakarta上很著名的另外两个开源项目Cactus和HTMLUnit都使用了HttpClient。 2、使用步骤和基本的方">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/pace.min.js"></script>
+  
+
+  
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">阿文&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a href="/">
+                        <i class="fa fa-home"></i>
+                        <span>主页</span>
+                    </a>
+                    
+                    <a href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>about me</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        阿文&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        欢迎来到阿文&#39;s blog
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="awen" target="_blank" href="//vicawen.com">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/craywan/">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//github.com/craywan/">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="CSDN" target="_blank" href="//github.com/craywan/">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-编程/原创专区/初识HttpClient" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      初识HttpClient
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2019-01-25
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h1 id="初识HttpClient"><a href="#初识HttpClient" class="headerlink" title="初识HttpClient"></a>初识HttpClient</h1><h2 id="1、HttpClient是Apache-Jakarta-Common下的子项目，用来提供高效的、最新的、功能丰富的支持HTTP协议的客户端编程工具包，并且它支持HTTP协议最新的版本和建议。HttpClient已经应用在很多的项目中，比如Apache-Jakarta上很著名的另外两个开源项目Cactus和HTMLUnit都使用了HttpClient。"><a href="#1、HttpClient是Apache-Jakarta-Common下的子项目，用来提供高效的、最新的、功能丰富的支持HTTP协议的客户端编程工具包，并且它支持HTTP协议最新的版本和建议。HttpClient已经应用在很多的项目中，比如Apache-Jakarta上很著名的另外两个开源项目Cactus和HTMLUnit都使用了HttpClient。" class="headerlink" title="1、HttpClient是Apache Jakarta Common下的子项目，用来提供高效的、最新的、功能丰富的支持HTTP协议的客户端编程工具包，并且它支持HTTP协议最新的版本和建议。HttpClient已经应用在很多的项目中，比如Apache Jakarta上很著名的另外两个开源项目Cactus和HTMLUnit都使用了HttpClient。"></a>1、HttpClient是Apache Jakarta Common下的子项目，用来提供高效的、最新的、功能丰富的支持HTTP协议的客户端编程工具包，并且它支持HTTP协议最新的版本和建议。HttpClient已经应用在很多的项目中，比如Apache Jakarta上很著名的另外两个开源项目Cactus和HTMLUnit都使用了HttpClient。</h2><hr>
+<h2 id="2、使用步骤和基本的方法"><a href="#2、使用步骤和基本的方法" class="headerlink" title="2、使用步骤和基本的方法:"></a>2、使用步骤和基本的方法:</h2><h3 id="（一）构建HttpClient对象："><a href="#（一）构建HttpClient对象：" class="headerlink" title="（一）构建HttpClient对象："></a>（一）构建HttpClient对象：</h3><p>1、首先创建一个HttpClient的的对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CloseableHttpClient httpClient = HttpClients.createDefault();</span><br></pre></td></tr></table></figure>
+<h3 id="（二）封装请求方法："><a href="#（二）封装请求方法：" class="headerlink" title="（二）封装请求方法："></a>（二）封装请求方法：</h3><p>1、封装相应的请求方法，GET请求用httpGet对象；POST请求用HttpPost对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HttpGet httpGet = new HttpGet(&quot;http://www.tuicool.com&quot;);//get</span><br><span class="line">HttpPost httpPost = new HttpPost(&quot;http://www.tuicool.com&quot;);//post</span><br></pre></td></tr></table></figure>
+<p>2、设置相应的请求头，PSOT请求还需要设置请求体</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">httpGet.setHeader(&quot;Accept&quot;, &quot;Accept text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&quot;);</span><br><span class="line">httpGet.setHeader(&quot;Accept-Charset&quot;, &quot;GB2312,utf-8;q=0.7,*;q=0.7&quot;);</span><br><span class="line">httpGet.setHeader(&quot;Accept-Encoding&quot;, &quot;gzip, deflate&quot;);</span><br><span class="line">httpGet.setHeader(&quot;Accept-Language&quot;, &quot;zh-cn,zh;q=0.5&quot;);</span><br><span class="line">httpGet.setHeader(&quot;Connection&quot;, &quot;keep-alive&quot;);</span><br><span class="line">httpGet.setHeader(&quot;Cookie&quot;, &quot;&quot;);</span><br><span class="line">httpGet.setHeader(&quot;Host&quot;, &quot;&quot;);</span><br><span class="line">httpGet.setHeader(&quot;refer&quot;, &quot;&quot;);</span><br><span class="line">httpGet.setHeader(&quot;User-Agent&quot;, &quot;Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)&quot;);</span><br></pre></td></tr></table></figure>
+<p>====注意：有些网站做得有反爬虫机制，可以设置请求头消息 User-Agent模拟浏览器====</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">httpGet.setHeader(&quot;User-Agent&quot;, &quot;Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:50.0) Gecko/20100101 Firefox/50.0&quot;); // 设置请求头消息User-Agent</span><br></pre></td></tr></table></figure>
+<h3 id="（三）处理响应内容并实体化响应内容："><a href="#（三）处理响应内容并实体化响应内容：" class="headerlink" title="（三）处理响应内容并实体化响应内容："></a>（三）处理响应内容并实体化响应内容：</h3><h3 id="1、获取响应的内容："><a href="#1、获取响应的内容：" class="headerlink" title="1、获取响应的内容："></a>1、获取响应的内容：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HttpEntity entity = response.getEntity();</span><br><span class="line">String resultStr = EntityUtils.toString(entity, &quot;utf-8&quot;);</span><br></pre></td></tr></table></figure>
+<h3 id="2、获取响应的Context-type"><a href="#2、获取响应的Context-type" class="headerlink" title="2、获取响应的Context-type"></a>2、获取响应的Context-type</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">entity.getContentType().getValue();</span><br></pre></td></tr></table></figure>
+<h3 id="3、获取响应的状态"><a href="#3、获取响应的状态" class="headerlink" title="3、获取响应的状态"></a>3、获取响应的状态</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.getStatusLine().getStatusCode();</span><br></pre></td></tr></table></figure>
+<h3 id="4、获取文件（图片为例）-先通过-entity-getContent-获取输入流，然后-使用-common-io-中的文件复制-方法-将图片专区到本地"><a href="#4、获取文件（图片为例）-先通过-entity-getContent-获取输入流，然后-使用-common-io-中的文件复制-方法-将图片专区到本地" class="headerlink" title="4、获取文件（图片为例）:先通过 entity.getContent() 获取输入流，然后 使用 common io 中的文件复制 方法 将图片专区到本地"></a>4、获取文件（图片为例）:先通过 entity.getContent() 获取输入流，然后 使用 common io 中的文件复制 方法 将图片专区到本地</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HttpEntity entity = response.getEntity();</span><br><span class="line">            if (entity != null)&#123;</span><br><span class="line">                System.out.println(&quot;Content-Type:&quot;+entity.getContentType().getValue());</span><br><span class="line">                InputStream inputStream = entity.getContent();</span><br><span class="line">                //文件复制</span><br><span class="line">                FileUtils.copyToFile(inputStream,new File(&quot;D:love&quot;+fileName));</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="结束啦！！！！参考"><a href="#结束啦！！！！参考" class="headerlink" title="结束啦！！！！参考"></a>结束啦！！！！<a href="https://www.cnblogs.com/zhangyinhua/p/8038377.html#undefined" target="_blank" rel="noopener">参考</a></h2>
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2019年01月25日 22:09</p>
+        <p>原始链接： <a class="post-url" href="/2019/01/25/编程/原创专区/初识HttpClient/" title="初识HttpClient">http://vicwen.com/2019/01/25/编程/原创专区/初识HttpClient/</a></p>
+        <footer>
+            <a href="http://vicwen.com">
+                <img src="/images/logo.png" alt="wanzh">
+                wanzh
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://vicwen.com/2019/01/25/编程/原创专区/初识HttpClient/&title=《初识HttpClient》 — ����'s Blog&pic=/初识HttpClient/1.png" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://vicwen.com/2019/01/25/编程/原创专区/初识HttpClient/&title=《初识HttpClient》 — ����'s Blog&source=���Լ�" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://vicwen.com/2019/01/25/编程/原创专区/初识HttpClient/" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《初识HttpClient》 — ����'s Blog&url=http://vicwen.com/2019/01/25/编程/原创专区/初识HttpClient/&via=http://vicwen.com" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://vicwen.com/2019/01/25/编程/原创专区/初识HttpClient/" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://vicwen.com/2019/01/25/编程/原创专区/初识HttpClient/" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/java实践/" class="color2">java实践</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#初识HttpClient"><span class="post-toc-text">初识HttpClient</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1、HttpClient是Apache-Jakarta-Common下的子项目，用来提供高效的、最新的、功能丰富的支持HTTP协议的客户端编程工具包，并且它支持HTTP协议最新的版本和建议。HttpClient已经应用在很多的项目中，比如Apache-Jakarta上很著名的另外两个开源项目Cactus和HTMLUnit都使用了HttpClient。"><span class="post-toc-text">1、HttpClient是Apache Jakarta Common下的子项目，用来提供高效的、最新的、功能丰富的支持HTTP协议的客户端编程工具包，并且它支持HTTP协议最新的版本和建议。HttpClient已经应用在很多的项目中，比如Apache Jakarta上很著名的另外两个开源项目Cactus和HTMLUnit都使用了HttpClient。</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2、使用步骤和基本的方法"><span class="post-toc-text">2、使用步骤和基本的方法:</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#（一）构建HttpClient对象："><span class="post-toc-text">（一）构建HttpClient对象：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#（二）封装请求方法："><span class="post-toc-text">（二）封装请求方法：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#（三）处理响应内容并实体化响应内容："><span class="post-toc-text">（三）处理响应内容并实体化响应内容：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1、获取响应的内容："><span class="post-toc-text">1、获取响应的内容：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2、获取响应的Context-type"><span class="post-toc-text">2、获取响应的Context-type</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3、获取响应的状态"><span class="post-toc-text">3、获取响应的状态</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4、获取文件（图片为例）-先通过-entity-getContent-获取输入流，然后-使用-common-io-中的文件复制-方法-将图片专区到本地"><span class="post-toc-text">4、获取文件（图片为例）:先通过 entity.getContent() 获取输入流，然后 使用 common io 中的文件复制 方法 将图片专区到本地</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#结束啦！！！！参考"><span class="post-toc-text">结束啦！！！！参考</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/2019/01/25/编程/JAVA/JVM/jvm垃圾回收机制总结（一）/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          jvm垃圾回收机制总结（一）
+        
+      </span>
+    </a>
+  
+  
+    <a href="/2019/01/21/编程/JAVA/java路径学习总结/" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">java路径学习总结</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style="display:none">
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style="display:none">
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2019 wanzh<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "http://vicwen.com",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/JAVA并发/" style="font-size: 10px;">JAVA并发</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/jDK源码学习系列/" style="font-size: 20px;">jDK源码学习系列</a> <a href="/tags/java实践/" style="font-size: 20px;">java实践</a> <a href="/tags/mysql专栏/" style="font-size: 10px;">mysql专栏</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/浅析算法/" style="font-size: 10px;">浅析算法</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a href="/">
+                    <i class="fa fa-home"></i><span>主页</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/about">
+                    <i class="fa fa-user"></i><span>about me</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/JAVA并发/" style="font-size: 10px;">JAVA并发</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/jDK源码学习系列/" style="font-size: 20px;">jDK源码学习系列</a> <a href="/tags/java实践/" style="font-size: 20px;">java实践</a> <a href="/tags/mysql专栏/" style="font-size: 10px;">mysql专栏</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/浅析算法/" style="font-size: 10px;">浅析算法</a> <a href="/tags/网络/" style="font-size: 10px;">网络</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+<script src="/js/search.js"></script>
+<script src="/js/main.js"></script>
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  <script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  <script src="/js/animate.js"></script>
+
+
+  <script src="/js/pop-img.js"></script>
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+</body>
+</html>
